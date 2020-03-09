@@ -100,6 +100,7 @@ namespace Senparc.Xscf.WeixinManager
         #endregion
 
         #region IXscfRazorRuntimeCompilation 接口
+        
         public string LibraryPath => Path.Combine(SiteConfig.WebRootPath, "..", "..", "..", "Senparc.Xscf.WeixinManager", "src", "Senparc.Xscf.WeixinManager");
 
         #endregion

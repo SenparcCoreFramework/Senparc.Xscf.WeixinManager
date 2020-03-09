@@ -11,6 +11,8 @@ namespace Senparc.Xscf.WeixinManager.Models
     [Serializable]
     public class MpAccount : EntityBase<int>
     {
+        [MaxLength(200)]
+        public string Logo { get; private set; }
         [Required]
         [MaxLength(100)]
         public string Name { get;private set; }
