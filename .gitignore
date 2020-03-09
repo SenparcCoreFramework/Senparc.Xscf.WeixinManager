@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+/.vs
+/src/.vs/Senparc.Xscf.WeixinManager
+/src/Senparc.Xscf.WeixinManager/obj
