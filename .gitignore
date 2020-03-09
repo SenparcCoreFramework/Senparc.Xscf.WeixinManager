@@ -33,3 +33,4 @@
 /.vs
 /src/.vs/Senparc.Xscf.WeixinManager
 /src/Senparc.Xscf.WeixinManager/obj
+/src/Senparc.Xscf.WeixinManager/bin/Debug/netcoreapp3.1
