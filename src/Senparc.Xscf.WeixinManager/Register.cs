@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.XscfBase;
 using System;
@@ -9,7 +11,8 @@ using System.Threading.Tasks;
 namespace Senparc.Xscf.WeixinManager
 {
     public class Register : XscfRegisterBase,
-         IXscfRegister
+        IXscfRegister, //注册 XSCF 基础模块接口（必须）
+        IAreaRegister //注册 XSCF 页面接口（按需选用）
     {
         #region IXscfRegister 接口
 
@@ -18,7 +21,7 @@ namespace Senparc.Xscf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.1.0-beta1";
+        public override string Version => "0.1.1-beta1";
 
 
         public override string MenuName => "微信管理";
@@ -40,7 +43,6 @@ namespace Senparc.Xscf.WeixinManager
             return services;
         }
 
-
         public async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
         {
         }
@@ -49,6 +51,18 @@ namespace Senparc.Xscf.WeixinManager
         {
         }
 
+        #endregion
+
+
+        #region IAreaRegister 接口
+        public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
+         new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"),"首页","fa fa-laptop"),
+         new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/User"),"用户列表","fa fa-users"),
+        };
+        public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnvironment env)
+        {
+            return builder;
+        }
         #endregion
     }
 }
