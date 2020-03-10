@@ -37,6 +37,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Models\Register.Database.cs" />
+  </ItemGroup>
   
   <ItemGroup>
     <Content Remove="appsettings.json" />

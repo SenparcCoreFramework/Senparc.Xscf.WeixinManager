@@ -25,5 +25,6 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         private MpAccountDto() { }
 
+        public ICollection<WeixinUser> WeixinUsers { get; set; }
     }
 }

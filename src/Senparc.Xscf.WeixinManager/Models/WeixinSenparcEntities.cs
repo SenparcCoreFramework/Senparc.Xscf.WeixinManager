@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase;
 using Senparc.Scf.XscfBase.Database;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Senparc.Xscf.WeixinManager

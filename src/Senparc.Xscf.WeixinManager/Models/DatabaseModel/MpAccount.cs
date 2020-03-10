@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Senparc.Xscf.WeixinManager.Models
 {
+    /// <summary>
+    /// 微信公众号信息
+    /// </summary>
     [Table(Register.DATABASE_PREFIX + nameof(MpAccount))]//必须添加前缀，防止全系统中发生冲突
     [Serializable]
     public class MpAccount : EntityBase<int>
@@ -30,5 +33,7 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         private MpAccount() { }
 
+
+        public ICollection<WeixinUser> WeixinUsers { get; set; }
     }
 }

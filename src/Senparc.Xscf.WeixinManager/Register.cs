@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Senparc.Xscf.WeixinManager
 {
-    public class Register : XscfRegisterBase,
+    public partial class Register : XscfRegisterBase,
         IXscfRegister, //注册 XSCF 基础模块接口（必须）
         IAreaRegister, //注册 XSCF 页面接口（按需选用）
         IXscfDatabase,  //注册 XSCF 模块数据库（按需选用）
@@ -45,7 +45,7 @@ namespace Senparc.Xscf.WeixinManager
         public override IList<Type> Functions => new Type[] { };
 
 
-        public IServiceCollection AddXscfModule(IServiceCollection services)
+        public override IServiceCollection AddXscfModule(IServiceCollection services)
         {
             return base.AddXscfModule(services);//如果重写此方法，必须调用基类方法
         }
@@ -70,44 +70,6 @@ namespace Senparc.Xscf.WeixinManager
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
-
-        #endregion
-
-
-        #region IAreaRegister 接口
-
-        public string HomeUrl => "/Admin/WeixinManager/Index";
-
-        public List<AreaPageMenuItem> AareaPageMenuItems => new List<AreaPageMenuItem>() {
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/Index"),"首页","fa fa-laptop"),
-             new AreaPageMenuItem(GetAreaUrl("/Admin/WeixinManager/User"),"用户列表","fa fa-users"),
-        };
-
-        public IMvcBuilder AuthorizeConfig(IMvcBuilder builder, IWebHostEnvironment env)
-        {
-            return builder;
-        }
-
-        #endregion
-
-        #region IXscfDatabase 接口
-
-        public void OnModelCreating(ModelBuilder modelBuilder)
-        {
-
-        }
-
-        public void AddXscfDatabaseModule(IServiceCollection services)
-        {
-            services.AddScoped<MpAccount>();
-            services.AddScoped<MpAccountDto>();
-        }
-
-        public const string DATABASE_PREFIX = "WeixinManager_";
-
-        public string DatabaseUniquePrefix => DATABASE_PREFIX;
-
-        public Type XscfDatabaseDbContextType => typeof(WeixinSenparcEntities);
 
         #endregion
 
