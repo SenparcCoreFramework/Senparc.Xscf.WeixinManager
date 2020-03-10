@@ -14,7 +14,9 @@ namespace Senparc.Xscf.WeixinManager
 
         public void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new UserTag_WeixinUserConfigurationMapping());
             modelBuilder.ApplyConfiguration(new WeixinUserConfigurationMapping());
+            modelBuilder.ApplyConfiguration(new UserTagConfigurationMapping());
         }
 
         public void AddXscfDatabaseModule(IServiceCollection services)

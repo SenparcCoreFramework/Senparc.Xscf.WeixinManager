@@ -12,7 +12,10 @@ namespace Senparc.Xscf.WeixinManager.Models
         {
             base.Configure(builder);
 
-            builder.HasKey(uw => new { uw.UserTagId, uw.MpAccountId });
+            builder.HasKey(uw => new { uw.UserTagId, uw.WeixinUserId });
+
+            builder.HasOne(z => z.UserTag).WithMany(z => z.UserTags_WeixinUsers).HasForeignKey(z => z.UserTagId);
+            builder.HasOne(z => z.WeixinUser).WithMany(z => z.UserTags_WeixinUsers).HasForeignKey(z => z.WeixinUserId);
         }
     }
 }

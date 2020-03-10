@@ -15,6 +15,6 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         private UserTag() { }
 
-        public ICollection<WeixinUser> WeixinUsers { get; private set; }
+        public IList<UserTag_WeixinUser> UserTags_WeixinUsers { get; private set; }
     }
 }

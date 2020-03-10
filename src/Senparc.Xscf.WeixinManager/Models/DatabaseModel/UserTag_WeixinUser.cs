@@ -16,10 +16,10 @@ namespace Senparc.Xscf.WeixinManager.Models
     [Serializable]
     public class UserTag_WeixinUser : EntityBase
     {
-        public int MpAccountId { get; private set; }
-        public IList<MpAccount> MpAccounts { get; private set; }
-
         public int UserTagId { get; private set; }
-        public IList<UserTag> UserTags { get; private set; }
+        public UserTag UserTag { get; private set; }
+        
+        public int WeixinUserId { get; private set; }
+        public WeixinUser WeixinUser { get; private set; }
     }
 }

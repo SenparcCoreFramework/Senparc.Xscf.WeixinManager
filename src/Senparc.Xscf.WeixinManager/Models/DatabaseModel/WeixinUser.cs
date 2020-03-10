@@ -93,6 +93,6 @@ namespace Senparc.Xscf.WeixinManager.Models
         /// 用户标签
         /// <para>对应微信API tagid_list 属性</para>
         /// </summary>
-        public ICollection<UserTag> UserTags { get; private set; }
+        public ICollection<UserTag_WeixinUser> UserTags_WeixinUsers { get; private set; }
     }
 }
