@@ -4,11 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.Core.Config;
 using Senparc.Scf.Core.Enums;
+using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,7 +29,7 @@ namespace Senparc.Xscf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.1.1-beta1";
+        public override string Version => "0.1.3-beta1";
 
 
         public override string MenuName => "微信管理";
@@ -45,7 +47,7 @@ namespace Senparc.Xscf.WeixinManager
 
         public IServiceCollection AddXscfModule(IServiceCollection services)
         {
-            return services;
+            return base.AddXscfModule(services);//如果重写此方法，必须调用基类方法
         }
 
         public async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
@@ -57,6 +59,16 @@ namespace Senparc.Xscf.WeixinManager
         public async Task UninstallAsync(IServiceProvider serviceProvider, Func<Task> unsinstallFunc)
         {
             //TODO:可以在基础模块里给出选项是否删除
+
+            WeixinSenparcEntities mySenparcEntities = serviceProvider.GetService<WeixinSenparcEntities>();
+
+            //指定需要删除的数据实体
+
+            //注意：这里作为演示，删除了所有的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XscfDatabaseDbContextType).Keys.ToArray();
+            await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
+
+            await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
         #endregion
@@ -100,7 +112,7 @@ namespace Senparc.Xscf.WeixinManager
         #endregion
 
         #region IXscfRazorRuntimeCompilation 接口
-        
+
         public string LibraryPath => Path.Combine(SiteConfig.WebRootPath, "..", "..", "..", "Senparc.Xscf.WeixinManager", "src", "Senparc.Xscf.WeixinManager");
 
         #endregion
