@@ -9,9 +9,9 @@ using Senparc.Xscf.WeixinManager.Models.VD.Admin;
 
 namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
 {
-    public class UserModel : BaseAdminWeixinManagerModel
+    public class WeixinUserModel : BaseAdminWeixinManagerModel
     {
-        public UserModel(Lazy<XscfModuleService> xscfModuleService) : base(xscfModuleService)
+        public WeixinUserModel(Lazy<XscfModuleService> xscfModuleService) : base(xscfModuleService)
         {
         }
 
