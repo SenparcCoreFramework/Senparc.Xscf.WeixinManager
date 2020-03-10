@@ -13,6 +13,9 @@ namespace Senparc.Xscf.WeixinManager
     public class WeixinSenparcEntities : XscfDatabaseDbContext
     {
         public DbSet<MpAccount> MpAccounts { get; set; }
+        public DbSet<WeixinUser> WeixinUsers { get; set; }
+        public DbSet<UserTag> UserTags { get; set; }
+        public DbSet<UserTag_WeixinUser> UserTags_WeixinUsers { get; set; }
 
         public WeixinSenparcEntities(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {

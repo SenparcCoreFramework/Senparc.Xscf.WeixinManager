@@ -11,11 +11,13 @@ namespace Senparc.Xscf.WeixinManager.Models
     {
         public override void Configure(EntityTypeBuilder<WeixinUser> builder)
         {
+            base.Configure(builder);
+
             builder.HasOne(z => z.MpAccount)
                 .WithMany(z => z.WeixinUsers)
                 .HasForeignKey(z => z.MpAccountId)
                 .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName($"FK__{nameof(WeixinUser)}__MpAccountId");
+                .HasConstraintName($"FK__{nameof(WeixinUser)}__{nameof(WeixinUser.MpAccountId)}");
         }
     }
 }
