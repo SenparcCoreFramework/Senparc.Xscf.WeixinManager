@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Areas;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Senparc.Xscf.WeixinManager
 {
-	public partial class Register
+	public partial class Register : IAreaRegister //注册 XSCF 页面接口（按需选用）
 	{
 		#region IAreaRegister 接口
 

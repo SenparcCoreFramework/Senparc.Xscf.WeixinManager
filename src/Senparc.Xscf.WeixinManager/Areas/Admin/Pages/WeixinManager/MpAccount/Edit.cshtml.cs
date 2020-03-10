@@ -47,9 +47,10 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.Pages.WeixinManager
         public async Task<IActionResult> OnPostAsync(int id = 0)
         {
             IsEdit = id > 0;
+            MpAccount mpAccount = null;
             if (IsEdit)
             {
-                var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
+                mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == id);
                 if (mpAccount == null)
                 {
                     return RenderError("公众号信息不存在！");
@@ -59,10 +60,10 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.Pages.WeixinManager
             }
             else
             {
-                var mpAccount = new MpAccount(MpAccountDto, _mpAccountService.Mapper);
+                mpAccount = new MpAccount(MpAccountDto);
                 _mpAccountService.SaveObject(mpAccount);
             }
-            return Page();
+            return RedirectToPage("./Edit", new { id = mpAccount.Id });
         }
     }
 }

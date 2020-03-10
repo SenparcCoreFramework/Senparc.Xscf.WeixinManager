@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.Scf.Core.Areas;
+using Senparc.Scf.XscfBase;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
@@ -8,8 +10,8 @@ using System.Text;
 
 namespace Senparc.Xscf.WeixinManager
 {
-	public partial class Register
-	{
+	public partial class Register : IXscfDatabase  //注册 XSCF 模块数据库（按需选用）
+    {
         #region IXscfDatabase 接口
 
         public void OnModelCreating(ModelBuilder modelBuilder)

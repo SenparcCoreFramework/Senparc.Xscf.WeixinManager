@@ -34,9 +34,16 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         private MpAccount() { }
 
-        public MpAccount(MpAccountDto dto, IMapper mapper)
+        public MpAccount(MpAccountDto dto)
         {
-            mapper.Map(dto, this);
+            Logo = dto.Logo;
+            Name = dto.Name;
+            AppId = dto.AppId;
+            AppSecret = dto.AppSecret;
+            Token = dto.Token;
+            EncodingAESKey = dto.EncodingAESKey;
+            AdminRemark = dto.AdminRemark;
+            Remark = dto.Remark;
             SetUpdateTime(SystemTime.Now.UtcDateTime);
         }
 

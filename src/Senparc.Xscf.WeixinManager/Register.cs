@@ -1,26 +1,15 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Senparc.Scf.Core.Areas;
-using Senparc.Scf.Core.Config;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.XscfBase;
-using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Senparc.Xscf.WeixinManager
 {
-    public partial class Register : XscfRegisterBase,
-        IXscfRegister, //注册 XSCF 基础模块接口（必须）
-        IAreaRegister, //注册 XSCF 页面接口（按需选用）
-        IXscfDatabase,  //注册 XSCF 模块数据库（按需选用）
-        IXscfRazorRuntimeCompilation  //需要使用 RazorRuntimeCompilation，在开发环境下实时更新 Razor Page
+    public partial class Register : XscfRegisterBase, IXscfRegister //注册 XSCF 基础模块接口（必须）
     {
         #region IXscfRegister 接口
 
@@ -70,12 +59,6 @@ namespace Senparc.Xscf.WeixinManager
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
-
-        #endregion
-
-        #region IXscfRazorRuntimeCompilation 接口
-
-        public string LibraryPath => Path.Combine(SiteConfig.WebRootPath, "..", "..", "..", "Senparc.Xscf.WeixinManager", "src", "Senparc.Xscf.WeixinManager");
 
         #endregion
     }
