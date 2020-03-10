@@ -10,7 +10,6 @@ namespace Senparc.Xscf.WeixinManager
 {
 	public partial class Register
 	{
-
         #region IXscfDatabase 接口
 
         public void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,8 +23,11 @@ namespace Senparc.Xscf.WeixinManager
         {
             services.AddScoped<MpAccount>();
             services.AddScoped<MpAccountDto>();
+            services.AddScoped<MpAccount_CreateOrUpdateDto>();
+
             services.AddScoped<WeixinUser>();
             services.AddScoped<WeixinUserDto>();
+            
             services.AddScoped<UserTag>();
             services.AddScoped<UserTag_WeixinUser>();
         }

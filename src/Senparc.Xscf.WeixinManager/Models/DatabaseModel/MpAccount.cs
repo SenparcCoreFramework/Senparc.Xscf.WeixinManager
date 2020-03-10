@@ -1,4 +1,5 @@
-﻿using Senparc.Scf.Core.Models;
+﻿using AutoMapper;
+using Senparc.Scf.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,7 @@ namespace Senparc.Xscf.WeixinManager.Models
         public string Logo { get; private set; }
         [Required]
         [MaxLength(100)]
-        public string Name { get;private set; }
+        public string Name { get; private set; }
         [Required]
         [MaxLength(100)]
         public string AppId { get; private set; }
@@ -33,7 +34,12 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         private MpAccount() { }
 
+        public MpAccount(MpAccountDto dto, IMapper mapper)
+        {
+            mapper.Map(dto, this);
+            SetUpdateTime(SystemTime.Now.UtcDateTime);
+        }
 
-        public ICollection<WeixinUser> WeixinUsers { get; set; }
+        public IList<WeixinUser> WeixinUsers { get; private set; }
     }
 }
