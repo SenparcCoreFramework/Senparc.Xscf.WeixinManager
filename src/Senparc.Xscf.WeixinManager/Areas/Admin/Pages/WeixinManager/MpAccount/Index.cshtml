@@ -15,7 +15,7 @@
                     <div class="col-xs-12 col-md-8 col-lg-8">
                         <h3>公众号列表</h3>
                     </div>
-                    <div  class="pull-right"><a class="btn btn-md btn-success" asp-page="./Edit" asp-route-uid="@Model.XscfModuleDto.Uid"><i class="fa fa-plus"></i> 新增</a></div>
+                    <div class="pull-right"><a class="btn btn-md btn-success" asp-page="./Edit" asp-route-uid="@Model.XscfModuleDto.Uid"><i class="fa fa-plus"></i> 新增</a></div>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -31,17 +31,26 @@
                                 <th class="column-title">#</th>
                                 <th class="column-title">名称</th>
                                 <th class="column-title">AppId</th>
+                                <th class="column-title">AppSecret</th>
                                 <th class="column-title">Token</th>
                                 <th class="column-title">EncodingAESKey</th>
                                 <th class="column-title">备注</th>
                                 <th class="column-title">说明</th>
                                 <th class="column-title">添加时间 </th>
                                 <th class="column-title">操作 </th>
-                                <th class="bulk-actions" colspan="16">
+                                <th class="bulk-actions">
                                     <a class="antoo" style="color:#fff; font-weight:500;">
                                         已选中 <span class="action-cnt"> </span>
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
+
+                                    <span class="col-lg-2"></span>
+                                    <label for="deleteBtn" class="btn-sm btn btn-danger" title="删除">
+                                        <em class="fa fa-trash-o"></em> &nbsp;<small>删除</small>
+                                        <input type="submit" id="deleteBtn" onclick="deleteCheck('ids','deleteForm'); return false;" form="deleteForm" class="hidden" value="删除" />
+                                    </label>
+                                </th>
+                                <th class="bulk-actions" colspan="8">
                                 </th>
                             </tr>
                         </thead>
@@ -59,13 +68,14 @@
                                     <td class=" ">@(i) </td>
                                     <td class=" ">@item.Name </td>
                                     <td class=" ">@item.AppId</td>
-                                    <td class=" ">@item.Token</td>
-                                    <td class=" ">v@(item.EncodingAESKey)</td>
+                                    <td class=" "><span data-original-title="@item.Token" data-toggle="tooltip" data-placement="top" class=""><i class="fa fa-map-marker fa-shield"></i> ****</span></td>
+                                    <td class=" "><span data-original-title="@item.AppSecret" data-toggle="tooltip" data-placement="top" class=""><i class="fa fa-map-marker fa-shield"></i> ****</span></td>
+                                    <td class=" "><span data-original-title="@item.EncodingAESKey" data-toggle="tooltip" data-placement="top" class=""><i class="fa fa-map-marker fa-shield"></i> ****</span></td>
                                     <td class=" ">@item.AdminRemark</td>
                                     <td class=" ">@item.Remark</td>
                                     <td class=" "> @item.AddTime.ToShortDateString()</td>
                                     <td class=" ">
-                                        <a asp-page="./Edit" asp-route-id="@item.Id"  asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
+                                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
                                             <em class="fa fa-edit"> 编辑</em>
                                         </a>
 
@@ -89,3 +99,4 @@
         </div>
     </div>
 </div>
+<form method="post" asp-page-handler="Delete" id="deleteForm"></form>

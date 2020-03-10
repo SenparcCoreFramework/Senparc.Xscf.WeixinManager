@@ -1,20 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Senparc.Scf.Service;
+using Senparc.Weixin.MP.Containers;
 using Senparc.Xscf.WeixinManager.Models;
 using Senparc.Xscf.WeixinManager.Models.VD.Admin;
+using System;
+using System.Threading.Tasks;
 
 namespace Senparc.Xscf.WeixinManager.Areas.Admin.Pages.WeixinManager
 {
     public class MpAccount_EditModel : BaseAdminWeixinManagerModel
     {
-        [ModelBinder]
+        [BindProperty]
         public MpAccountDto MpAccountDto { get; set; }
+
         private readonly ServiceBase<MpAccount> _mpAccountService;
+        public bool IsEdit { get; set; }
 
         public MpAccount_EditModel(Lazy<XscfModuleService> xscfModuleService,
                                    ServiceBase<MpAccount> mpAccountService) : base(xscfModuleService)
@@ -22,7 +22,6 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.Pages.WeixinManager
             _mpAccountService = mpAccountService;
         }
 
-        public bool IsEdit { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id = 0)
         {
@@ -56,14 +55,19 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.Pages.WeixinManager
                     return RenderError("公众号信息不存在！");
                 }
                 _mpAccountService.Mapper.Map(MpAccountDto, mpAccount);
-                _mpAccountService.SaveObject(mpAccount);
             }
             else
             {
                 mpAccount = new MpAccount(MpAccountDto);
-                _mpAccountService.SaveObject(mpAccount);
             }
-            return RedirectToPage("./Edit", new { id = mpAccount.Id });
+            await _mpAccountService.SaveObjectAsync(mpAccount);
+
+            //重新进行公众号注册
+            await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
+            //立即获取 AccessToken
+            await AccessTokenContainer.GetAccessTokenAsync(mpAccount.AppId, true);
+
+            return RedirectToPage("./Edit", new { id = mpAccount.Id, uid = Uid });
         }
     }
 }
