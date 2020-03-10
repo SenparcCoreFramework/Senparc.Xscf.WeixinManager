@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
@@ -25,6 +26,8 @@ namespace Senparc.Xscf.WeixinManager
             services.AddScoped<MpAccountDto>();
             services.AddScoped<WeixinUser>();
             services.AddScoped<WeixinUserDto>();
+            services.AddScoped<UserTag>();
+            services.AddScoped<UserTag_WeixinUser>();
         }
 
         public const string DATABASE_PREFIX = "WeixinManager_";
@@ -32,6 +35,11 @@ namespace Senparc.Xscf.WeixinManager
         public string DatabaseUniquePrefix => DATABASE_PREFIX;
 
         public Type XscfDatabaseDbContextType => typeof(WeixinSenparcEntities);
+
+        public override void DbContextOptionsAction(IRelationalDbContextOptionsBuilderInfrastructure dbContextOptionsAction, string assemblyName = null)
+        {
+            base.DbContextOptionsAction(dbContextOptionsAction, assemblyName);
+        }
 
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using Senparc.Scf.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -18,7 +19,7 @@ namespace Senparc.Xscf.WeixinManager.Models
     {
         public int UserTagId { get; private set; }
         public UserTag UserTag { get; private set; }
-        
+
         public int WeixinUserId { get; private set; }
         public WeixinUser WeixinUser { get; private set; }
     }
