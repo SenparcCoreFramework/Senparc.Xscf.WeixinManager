@@ -36,7 +36,7 @@
                 success: function (json) {
                     bildMpAccountChart(json);
                     chartBuilt = true;
-                    setTimeout(getCharData, 1000 * 60);
+                    setTimeout(getCharData, 1000 * 5);
                 }
             });
         }
@@ -44,38 +44,39 @@
         function bildMpAccountChart(dataArr) {
             for (var i = 0; i < dataArr.length; i++) {
                 var data = dataArr[i];
-                var id = 'chart_mpaccount_' + data.id;
-                var myChart = echarts.init(document.getElementById(id));
-
                 var status = data.status;
                 var leftTimePercent = data.leftPercent;
 
                 if (chartBuilt) {
-                    chartOptions[data.id+''].series[0].data[0].value = leftTimePercent;
-                    chartOptions[data.id+''].series[0].data[0].name = status;
+                    chartOptions[data.id+''].options.series[0].data[0].value = leftTimePercent;
+                    chartOptions[data.id+''].options.series[0].data[0].name = status;
                 } else {
+                    var id = 'chart_mpaccount_' + data.id;
                 // 指定图表的配置项和数据
-                    chartOptions[data.id+''] = {
-                        tooltip: {
-                            formatter: '{a} <br/>{b} : {c}%'
-                        },
-                        toolbox: {
-                            feature: {
-                                restore: {},
-                                saveAsImage: {}
-                            }
-                        },
-                        series: [
-                            {
-                                name: 'AccessToken 凭证状态',
-                                type: 'gauge',
-                                detail: { formatter: '{value}%' },
-                                data: [{ value: leftTimePercent, name: status }]
-                            }
-                        ]
+                    chartOptions[data.id + ''] = {
+                        chartObj: echarts.init(document.getElementById(id)),
+                        options: {
+                            tooltip: {
+                                formatter: '{a} <br/>{b} : {c}%'
+                            },
+                            toolbox: {
+                                feature: {
+                                    restore: {},
+                                    saveAsImage: {}
+                                }
+                            },
+                            series: [
+                                {
+                                    name: 'AccessToken 凭证状态',
+                                    type: 'gauge',
+                                    detail: { formatter: '{value}%' },
+                                    data: [{ value: leftTimePercent, name: status }]
+                                }
+                            ]
+                        }
                     };
                 }
-                myChart.setOption(chartOptions[data.id+''], true);
+                chartOptions[data.id+''].chartObj.setOption(chartOptions[data.id+''].options, true);
             }
         }
     </script>
