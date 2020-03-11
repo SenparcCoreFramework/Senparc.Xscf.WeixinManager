@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Senparc.Xscf.WeixinManager
 {
-	public partial class Register : IXscfDatabase  //注册 XSCF 模块数据库（按需选用）
+    public partial class Register : IXscfDatabase  //注册 XSCF 模块数据库（按需选用）
     {
         #region IXscfDatabase 接口
 
@@ -29,7 +29,7 @@ namespace Senparc.Xscf.WeixinManager
 
             services.AddScoped<WeixinUser>();
             services.AddScoped<WeixinUserDto>();
-            
+
             services.AddScoped<UserTag>();
             services.AddScoped<UserTag_WeixinUser>();
         }

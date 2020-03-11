@@ -151,11 +151,11 @@
                             <div class="dashboard-widget-content">
                                 <div class="col-md-4 col-sm-4">
                                     <ul class="quick-list">
-                                        <li><i class="fa fa-line-chart"></i><a asp-page="../WeixinUser" asp-route-uid="@Model.Uid">查看用户</a></li>
+                                        <li><i class="fa fa-line-chart"></i><a asp-page="./WeixinUser/Index" asp-route-uid="@Model.Uid" asp-route-mpId="@mpAccountDto.Id">查看用户</a></li>
                                         <li><i class="fa fa-thumbs-up"></i><a href="#">查看分组</a></li>
                                         <li><i class="fa fa-calendar-o"></i><a href="#">查看标签</a></li>
                                         <li><i class="fa fa-area-chart"></i><a href="#">对话</a></li>
-                                        <li><i class="fa fa-cog"></i><a asp-page="Edit" asp-route-uid="@Model.Uid">编辑</a></li>
+                                        <li><i class="fa fa-cog"></i><a asp-page="./MpAccount/Edit" asp-route-uid="@Model.Uid" asp-route-id="@mpAccountDto.Id">编辑</a></li>
                                     </ul>
                                 </div>
                                 <div class="col-md-4 col-sm-4">

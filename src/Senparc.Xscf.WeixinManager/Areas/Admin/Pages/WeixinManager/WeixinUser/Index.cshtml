@@ -1,7 +1,105 @@
 ﻿@page
 @model Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager.WeixinUser_IndexModel
 @{
+    var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}的":"所有";
+    ViewData["Title"] = $"{namePrefix}用户";
 }
-<div>
-    
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="pull-left" style="width: 100%">
+                <div class="row">
+                    <div class="col-xs-12 col-md-8 col-lg-8">
+                        @*   <h3>用户</h3>*@
+                    </div>
+                    @*<div class="pull-right"><a class="btn btn-md btn-success" asp-page="./Edit" asp-route-uid="@Model.XscfModuleDto.Uid"><i class="fa fa-plus"></i> 新增</a></div>*@
+
+                    @if (Model.MpAccountDto != null)
+                    {
+                        <div class="pull-right"><a class="btn btn-md btn-success" asp-page="./Index" asp-route-uid="@Model.XscfModuleDto.Uid" asp-page-handler="SyncUser" asp-route-mpId="@Model.MpAccountDto.Id"><i class="fa fa-plus"></i> 同步所有关注</a> 注意：如果用户数量众多，可能会消耗非常长的时间！</div>
+                    }
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="x_content">
+                @*<p>Add class <code>bulk_action</code> to table for bulk actions options on row select</p>*@
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th>
+                                    <input type="checkbox" id="check-all" class="flat">
+                                </th>
+                                <th class="column-title">#</th>
+                                <th class="column-title">昵称</th>
+                                <th class="column-title">头像</th>
+                                <th class="column-title">地区</th>
+                                <th class="column-title">分组</th>
+                                <th class="column-title">标签</th>
+                                <th class="column-title">备注</th>
+                                <th class="column-title">说明</th>
+                                <th class="column-title">添加时间 </th>
+                                <th class="column-title">操作 </th>
+                                <th class="bulk-actions">
+                                    <a class="antoo" style="color:#fff; font-weight:500;">
+                                        已选中 <span class="action-cnt"> </span>
+                                        <i class="fa fa-chevron-down"></i>
+                                    </a>
+
+                                    <span class="col-lg-2"></span>
+                                    <label for="deleteBtn" class="btn-sm btn btn-danger" title="删除">
+                                        <em class="fa fa-trash-o"></em> &nbsp;<small>删除</small>
+                                        <input type="submit" id="deleteBtn" onclick="deleteCheck('ids','deleteForm'); return false;" form="deleteForm" class="hidden" value="删除" />
+                                    </label>
+                                </th>
+                                <th class="bulk-actions" colspan="8">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 0;
+                            }
+                            @foreach (var item in Model.WeixinUserDtos)
+                            {
+                                i++;
+                                <tr class="pointer">
+                                    <td class="a-center ">
+                                        <input type="checkbox" class="flat table_records" name="ids" form="deleteForm" value="@item.Id">
+                                    </td>
+                                    <td class=" ">@(i) </td>
+                                    <td class=" ">@item.NickName </td>
+                                    <td class=" "><img src="@item.HeadImgUrl" height="50" /></td>
+                                    <td class=" ">@item.Country @item.Province @item.City</td>
+                                    <td class=" ">@item.Groupid</td>
+                                    <td class=" ">@string.Join(",", item.Tagid_List.Select(z => z.ToString()))</td>
+                                    <td class=" ">@item.AdminRemark</td>
+                                    <td class=" ">@item.Remark</td>
+                                    <td class=" "> @item.AddTime.ToShortDateString()</td>
+                                    <td class=" ">
+                                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
+                                            <em class="fa fa-edit"> 编辑</em>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center p jpagerbar">
+                    @Html.Raw((Html.PagerBar(Model.WeixinUserDtos, new PagerBarSettings(Url.Page("./Index", new
+               {
+                   pageIndex = "{0}"
+               }))
+               {
+                   NoRecordTip = "暂无数据",
+                   ShowTotalCount = true
+               })))
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<form method="post" asp-page-handler="Delete" id="deleteForm"></form>
