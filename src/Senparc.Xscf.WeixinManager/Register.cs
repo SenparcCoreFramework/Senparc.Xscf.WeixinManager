@@ -1,7 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models;
+using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
+using Senparc.Scf.XscfBase.Database;
+using Senparc.Weixin.MP.Containers;
+using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +63,25 @@ namespace Senparc.Xscf.WeixinManager
             await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
+        }
+
+        public override IApplicationBuilder UseXscfModule(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var mpAccountService = scope.ServiceProvider.GetService<ServiceBase<MpAccount>>();
+                var allMpAccount = mpAccountService.GetFullList(z => z.AppId != null && z.AppId.Length > 0, z => z.Id, OrderingType.Ascending);
+
+                //批量自动注册公众号
+                foreach (var mpAccount in allMpAccount)
+                {
+                    Task.Factory.StartNew(async () =>
+                    {
+                        await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
+                    });
+                }
+            }
+            return base.UseXscfModule(app);
         }
 
         #endregion
