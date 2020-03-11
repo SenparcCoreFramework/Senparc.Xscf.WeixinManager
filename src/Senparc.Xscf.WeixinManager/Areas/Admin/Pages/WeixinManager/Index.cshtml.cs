@@ -16,6 +16,15 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
 {
     public class IndexModel : BaseAdminWeixinManagerModel
     {
+        public class AccessTokenData
+        {
+            public int Id { get; set; }
+            public string AppId { get; set; }
+            public int TotalSeconds { get; set; }
+            public double LeftPercent { get; set; }
+            public string Status { get; set; }
+        }
+
         public List<MpAccountDto> MpAccountDtos { get; set; }
         public int RegisteredMpAccountCount { get; set; }
         public int WeixinUserCount { get; set; }
@@ -55,6 +64,57 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             }
 
             WeixinUserCount = await _weixinUserService.GetCountAsync(z => true);
+        }
+
+        public async Task<IActionResult> OnGetAccessTokenStatusAsync(int[] ids)
+        {
+            var data = new List<AccessTokenData>();
+            var allMpAccounts = await _mpAccountService.GetFullListAsync(z => true);
+            foreach (var id in ids)
+            {
+                var mpAccount = allMpAccounts.FirstOrDefault(z => z.Id == id);
+                if (mpAccount == null)
+                {
+                    continue;
+                }
+                var appId = mpAccount.AppId;
+                string status = null;
+                double leftSeconds = 0;
+                AccessTokenBag bag = null;
+                if (await AccessTokenContainer.CheckRegisteredAsync(appId))
+                {
+                    bag = await AccessTokenContainer.TryGetItemAsync(appId);
+                    if (bag.AccessTokenResult != null && !bag.AccessTokenResult.access_token.IsNullOrEmpty())
+                    {
+                        leftSeconds = (bag.AccessTokenExpireTime - SystemTime.Now).TotalSeconds;
+                        if (leftSeconds > 0)
+                        {
+                            status = "有效";
+                        }
+                        else
+                        {
+                            leftSeconds = 0;
+                            status = "已过期";
+                        }
+                    }
+                    else
+                    {
+                        status = "无效";
+                    }
+
+                }
+                else
+                {
+                    status = "未注册";
+                }
+                data.Add(new AccessTokenData()
+                {
+                    AppId = appId,
+                    LeftPercent = bag?.AccessTokenResult != null ? Math.Round(leftSeconds / bag.AccessTokenResult.expires_in, 1) : 0,
+                    TotalSeconds = bag?.AccessTokenResult.expires_in ?? 0,
+                });
+            }
+            return new JsonResult(data);
         }
     }
 }

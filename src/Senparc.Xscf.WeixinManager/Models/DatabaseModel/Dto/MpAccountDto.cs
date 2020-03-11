@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Senparc.Scf.Core.Models;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using System;
 using System.Collections.Generic;
