@@ -32,6 +32,12 @@ namespace Senparc.Xscf.WeixinManager
 
             services.AddScoped<UserTag>();
             services.AddScoped<UserTag_WeixinUser>();
+
+            //AutoMap映射
+            base.AddAutoMapMapping(profile => {
+                profile.CreateMap<Weixin.MP.AdvancedAPIs.User.UserInfoJson, WeixinUser_UpdateFromApiDto>();
+                profile.CreateMap<WeixinUser_UpdateFromApiDto, WeixinUser>();
+            });
         }
 
         public const string DATABASE_PREFIX = "WeixinManager_";

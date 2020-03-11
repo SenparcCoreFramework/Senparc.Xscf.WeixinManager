@@ -88,7 +88,7 @@ namespace Senparc.Xscf.WeixinManager.Models
     }
 
 
-    public class WeixinUser_CreateOrUpdateDto : DtoBase
+    public class WeixinUser_UpdateFromApiDto
     {
         /// <summary>
         /// 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
@@ -163,36 +163,11 @@ namespace Senparc.Xscf.WeixinManager.Models
         /// </summary>
         public string Qr_Scene_Str { get; set; }
 
-        [IgnoreMap]
-        new public bool Flag
-        {
-            get;
-            set;
-        }
 
-        [MaxLength(150)]
-        [IgnoreMap]
-        new public string AdminRemark
-        {
-            get;
-            set;
-        }
-
-        [IgnoreMap]
-        new public DateTime AddTime
-        {
-            get;
-            set;
-        }
-
-        [IgnoreMap]
-        new public DateTime LastUpdateTime
-        {
-            get;
-            set;
-        }
-        public WeixinUser_CreateOrUpdateDto() { }
+        public WeixinUser_UpdateFromApiDto() { }
 
         //public MpAccount MpAccount { get; set; }
+
+        public int MpAccountId { get; set; }
     }
 }

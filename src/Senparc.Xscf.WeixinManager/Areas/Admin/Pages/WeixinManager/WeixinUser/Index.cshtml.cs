@@ -63,24 +63,28 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             while (true)
             {
                 var result = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.GetAsync(mpAccount.AppId, lastOpenId);
-                foreach (var openId in result.data.openid)
+                if (result.data!=null)
                 {
-                    var user = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.InfoAsync(mpAccount.AppId, openId);
-                    var weixinUser = await _weixinUserService.GetObjectAsync(z => z.OpenId == result.next_openid);
-                    var weixinUserDto = _weixinUserService.Mapper.Map<WeixinUser_CreateOrUpdateDto>(user);
-                    if (weixinUser != null)
+                    foreach (var openId in result.data.openid)
                     {
-                        //TODO:更新 特定的DTO对象
-                        //weixinUserDto.Id = weixinUser.Id;
-                    }
-                    else
-                    {
-                        //TODO:更新group和tag信息
-                        weixinUser = _weixinUserService.Mapper.Map<Models.WeixinUser>(weixinUserDto);
-                        await _weixinUserService.SaveObjectAsync(weixinUser);
+                        var user = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.InfoAsync(mpAccount.AppId, openId);
+                        var weixinUser = await _weixinUserService.GetObjectAsync(z => z.OpenId == result.next_openid);
+                        var weixinUserDto = _weixinUserService.Mapper.Map<WeixinUser_UpdateFromApiDto>(user);
+                        weixinUserDto.MpAccountId = mpId;
+                        if (weixinUser != null)
+                        {
+                            //TODO:判断并更新 特定的DTO对象
+                            //weixinUserDto.Id = weixinUser.Id;
+                        }
+                        else
+                        {
+                            //TODO:更新group和tag信息
+                            weixinUser = _weixinUserService.Mapper.Map<Models.WeixinUser>(weixinUserDto);
+                            await _weixinUserService.SaveObjectAsync(weixinUser);
+                        }
                     }
                 }
-
+               
                 if (result.next_openid.IsNullOrEmpty())
                 {
                     break;
