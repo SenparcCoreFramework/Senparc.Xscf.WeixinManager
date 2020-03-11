@@ -36,6 +36,9 @@
                                 <th class="column-title">头像</th>
                                 <th class="column-title">地区</th>
                                 <th class="column-title">分组</th>
+                                <th class="column-title">关注时间</th>
+                                <th class="column-title">关注状态</th>
+                                <th class="column-title">关注场景</th>
                                 <th class="column-title">标签</th>
                                 <th class="column-title">备注</th>
                                 <th class="column-title">说明</th>
@@ -64,26 +67,29 @@
                             @foreach (var item in Model.WeixinUserDtos)
                             {
                                 i++;
-                                <tr class="pointer">
-                                    <td class="a-center ">
-                                        <input type="checkbox" class="flat table_records" name="ids" form="deleteForm" value="@item.Id">
-                                    </td>
-                                    <td class=" ">@(i) </td>
-                                    <td class=" ">@item.NickName </td>
-                                    <td class=" "><img src="@item.HeadImgUrl" height="50" /></td>
-                                    <td class=" ">@item.Country @item.Province @item.City</td>
-                                    <td class=" ">@item.Groupid</td>
-                                    <td class=" ">@string.Join(",", item.Tagid_List.Select(z => z.ToString()))</td>
-                                    <td class=" ">@item.AdminRemark</td>
-                                    <td class=" ">@item.Remark</td>
-                                    <td class=" "> @item.AddTime.ToShortDateString()</td>
-                                    <td class=" ">
-                                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
-                                            <em class="fa fa-edit"> 编辑</em>
-                                        </a>
+                            <tr class="pointer">
+                                <td class="a-center ">
+                                    <input type="checkbox" class="flat table_records" name="ids" form="deleteForm" value="@item.Id">
+                                </td>
+                                <td class=" ">@(i) </td>
+                                <td class=" ">@item.NickName </td>
+                                <td class=" "><img src="@item.HeadImgUrl" height="50" /></td>
+                                <td class=" ">@item.Country @item.Province @item.City</td>
+                                <td class=" ">@item.Groupid</td>
+                                <td class=" ">@(new DateTime(1970, 1, 1).AddSeconds(item.Subscribe_Time).ToString())</td>
+                                <td class=" ">@(item.Subscribe == 1 ? "是" : "否")</td>
+                                <td class=" ">@item.Subscribe_Scene</td>
+                                <td class=" ">@(item.Tagid_List == null ? "无" : string.Join(",", item.Tagid_List.Select(z => z.ToString())))</td>
+                                <td class=" ">@item.AdminRemark</td>
+                                <td class=" ">@item.Remark</td>
+                                <td class=" "> @item.AddTime.ToShortDateString()</td>
+                                <td class=" ">
+                                    <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
+                                        <em class="fa fa-edit"> 编辑</em>
+                                    </a>
 
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -102,4 +108,6 @@
         </div>
     </div>
 </div>
-<form method="post" asp-page-handler="Delete" id="deleteForm"></form>
+<form method="post" asp-page-handler="Delete" id="deleteForm">
+    <input type="hidden" name="uid" value="@Model.Uid" />
+</form>

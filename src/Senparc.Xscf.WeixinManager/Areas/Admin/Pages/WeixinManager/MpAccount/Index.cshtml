@@ -73,6 +73,10 @@
                                     <td class=" ">@item.Remark</td>
                                     <td class=" "> @item.AddTime.ToShortDateString()</td>
                                     <td class=" ">
+                                        <a asp-page="../WeixinUser/Index" asp-route-mpid="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="查看会员" class="btn-xs btn btn-info">
+                                            <em class="fa fa-comments"> 查看会员</em>
+                                        </a>
+
                                         <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
                                             <em class="fa fa-edit"> 编辑</em>
                                         </a>

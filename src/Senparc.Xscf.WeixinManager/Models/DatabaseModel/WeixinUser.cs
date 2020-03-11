@@ -87,7 +87,10 @@ namespace Senparc.Xscf.WeixinManager.Models
         /// </summary>
         public string Qr_Scene_Str { get; private set; }
 
-        private WeixinUser() { }
+        private WeixinUser()
+        {
+            base.SetUpdateTime();
+        }
 
         /// <summary>
         /// 用户标签

@@ -37,6 +37,8 @@ namespace Senparc.Xscf.WeixinManager
             base.AddAutoMapMapping(profile => {
                 profile.CreateMap<Weixin.MP.AdvancedAPIs.User.UserInfoJson, WeixinUser_UpdateFromApiDto>();
                 profile.CreateMap<WeixinUser_UpdateFromApiDto, WeixinUser>();
+                profile.CreateMap<WeixinUserDto, WeixinUser>();
+                profile.CreateMap<WeixinUser, WeixinUserDto>();
             });
         }
 

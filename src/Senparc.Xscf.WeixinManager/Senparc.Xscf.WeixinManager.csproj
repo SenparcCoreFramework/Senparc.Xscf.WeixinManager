@@ -57,10 +57,10 @@
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
 
     
-    <PackageReference Include="Senparc.Scf.AreaBase" Version="0.1.118-beta1" />
-    <PackageReference Include="Senparc.Scf.Core" Version="0.3.118-beta1" />
-    <PackageReference Include="Senparc.Scf.Mvc.UI" Version="0.3.118-beta1" />
-    <PackageReference Include="Senparc.Scf.XscfBase" Version="0.3.118.2-beta1" />
+    <PackageReference Include="Senparc.Scf.AreaBase" Version="0.1.119-beta1" />
+    <PackageReference Include="Senparc.Scf.Core" Version="0.3.119-beta1" />
+    <PackageReference Include="Senparc.Scf.Mvc.UI" Version="0.3.119-beta1" />
+    <PackageReference Include="Senparc.Scf.XscfBase" Version="0.3.119-beta1" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.10.304" />
     <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="0.1.304" />
   </ItemGroup>
@@ -68,6 +68,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Pages\Shared\" />
+    <Folder Include="Areas\Admin\Pages\WeixinManager\UserTag\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 

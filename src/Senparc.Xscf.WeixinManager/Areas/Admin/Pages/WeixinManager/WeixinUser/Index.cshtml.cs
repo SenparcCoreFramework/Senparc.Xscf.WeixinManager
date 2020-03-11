@@ -43,7 +43,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             }
 
             var seh = new Scf.Utility.SenparcExpressionHelper<Models.WeixinUser>();
-            seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.Id == MpAccountDto.Id);
+            seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
             var where = seh.BuildWhereExpression();
             var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where, z => z.Id, Scf.Core.Enums.OrderingType.Descending);
             WeixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
@@ -68,7 +68,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                     foreach (var openId in result.data.openid)
                     {
                         var user = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.InfoAsync(mpAccount.AppId, openId);
-                        var weixinUser = await _weixinUserService.GetObjectAsync(z => z.OpenId == result.next_openid);
+                        var weixinUser = await _weixinUserService.GetObjectAsync(z => z.OpenId == openId);
                         var weixinUserDto = _weixinUserService.Mapper.Map<WeixinUser_UpdateFromApiDto>(user);
                         weixinUserDto.MpAccountId = mpId;
                         if (weixinUser != null)
@@ -93,6 +93,21 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             }
             base.SetMessager(Scf.Core.Enums.MessageType.success, "更新成功！");
             return RedirectToPage("./Index", new { uid = Uid, mpId = mpId });
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int[] ids)
+        {
+            var mpId = 0;
+            foreach (var id in ids)
+            {
+                var weixinUser = await _weixinUserService.GetObjectAsync(z => z.Id == id);
+                if (weixinUser != null)
+                {
+                    mpId = weixinUser.MpAccountId;
+                    await _weixinUserService.DeleteObjectAsync(weixinUser);
+                }
+            }
+            return RedirectToPage("./Index",new { Uid, mpId });
         }
     }
 }
