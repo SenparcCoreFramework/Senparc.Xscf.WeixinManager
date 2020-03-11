@@ -66,7 +66,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             WeixinUserCount = await _weixinUserService.GetCountAsync(z => true);
         }
 
-        public async Task<IActionResult> OnGetAccessTokenStatusAsync(int[] ids)
+        public async Task<IActionResult> OnPostAccessTokenStatusAsync(int[] ids)
         {
             var data = new List<AccessTokenData>();
             var allMpAccounts = await _mpAccountService.GetFullListAsync(z => true);
@@ -109,8 +109,10 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                 }
                 data.Add(new AccessTokenData()
                 {
+                    Id = id,
                     AppId = appId,
-                    LeftPercent = bag?.AccessTokenResult != null ? Math.Round(leftSeconds / bag.AccessTokenResult.expires_in, 1) : 0,
+                    Status = status,
+                    LeftPercent = bag?.AccessTokenResult != null ? Math.Round(leftSeconds / bag.AccessTokenResult.expires_in * 100, 1) : 0,
                     TotalSeconds = bag?.AccessTokenResult.expires_in ?? 0,
                 });
             }

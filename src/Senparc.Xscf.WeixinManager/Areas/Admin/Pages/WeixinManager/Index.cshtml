@@ -13,58 +13,70 @@
     <script src="~/node_modules/gentelella/vendors/echarts/dist/echarts.min.js"></script>
     <script src="~/node_modules/gentelella/vendors/echarts/map/js/world.js"></script>
     <script>
+        var mpAccountJson = @Model.MpAccountDtos.Select(z=>z.Id).ToJson();
+        var chartOptions = {};
+        var chartBuilt = false;
         $(function () {
-            var idsData = {};
-            var mpAccountJson = @Model.MpAccountDtos.Select(z=>z.Id).ToJson();
+            getCharData();
+        });
 
+        function getCharData() {
+            var idsData = {};
             for (var i = 0; i < mpAccountJson.length; i++) {
                 idsData['ids[' + i + ']'] = mpAccountJson[i];
             }
 
-            setInterval(function () {
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.PageLink("./Index", "AccessTokenStatus", new { uid = Model.Uid})',
-                    data: idsData,
-                    success: function (json) {
-                        bildMpAccountChart(json);
-                    }
-                });
-
-             }, 2000);
-
-
-        });
-
-        function bildMpAccountChart(data) {
-            var id = 'chart_mpaccount_' + data.Id;
-            var myChart = echarts.init(document.getElementById(id));
-
-            var status = data.Status;
-            var leftTimePercent = data.LeftPercent;
-
-            // 指定图表的配置项和数据
-            option = {
-                tooltip: {
-                    formatter: '{a} <br/>{b} : {c}%'
+            $.ajax({
+                type: 'POST',
+                url: '@Html.Raw(Url.PageLink("./Index", "AccessTokenStatus", new { uid = Model.Uid}))',
+                headers: {
+                "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').first().val()
                 },
-                toolbox: {
-                    feature: {
-                        restore: {},
-                        saveAsImage: {}
-                    }
-                },
-                series: [
-                    {
-                        name: 'AccessToken 凭证状态',
-                        type: 'gauge',
-                        detail: { formatter: '{value}%' },
-                        data: [{ value: leftTimePercent, name: status }]
-                    }
-                ]
-            };
+                data: idsData,
+                success: function (json) {
+                    bildMpAccountChart(json);
+                    chartBuilt = true;
+                    setTimeout(getCharData, 1000 * 60);
+                }
+            });
+        }
 
-            myChart.setOption(option, true);
+        function bildMpAccountChart(dataArr) {
+            for (var i = 0; i < dataArr.length; i++) {
+                var data = dataArr[i];
+                var id = 'chart_mpaccount_' + data.id;
+                var myChart = echarts.init(document.getElementById(id));
+
+                var status = data.status;
+                var leftTimePercent = data.leftPercent;
+
+                if (chartBuilt) {
+                    chartOptions[data.id+''].series[0].data[0].value = leftTimePercent;
+                    chartOptions[data.id+''].series[0].data[0].name = status;
+                } else {
+                // 指定图表的配置项和数据
+                    chartOptions[data.id+''] = {
+                        tooltip: {
+                            formatter: '{a} <br/>{b} : {c}%'
+                        },
+                        toolbox: {
+                            feature: {
+                                restore: {},
+                                saveAsImage: {}
+                            }
+                        },
+                        series: [
+                            {
+                                name: 'AccessToken 凭证状态',
+                                type: 'gauge',
+                                detail: { formatter: '{value}%' },
+                                data: [{ value: leftTimePercent, name: status }]
+                            }
+                        ]
+                    };
+                }
+                myChart.setOption(chartOptions[data.id+''], true);
+            }
         }
     </script>
 }
@@ -104,7 +116,7 @@
                         <div class="icon">
                             <i class="fa fa-caret-square-o-right"></i>
                         </div>
-                        <div class="count">@Model.RegisteredMpAccountCount</div>
+                        <div class="count">@Model.WeixinUserCount</div>
                         <h3>总微信用户数</h3>
                         <p>在当前平台交互过或自动拉取关注的用户数</p>
                     </div>
@@ -136,24 +148,6 @@
                         </div>
                         <div class="x_content">
                             <div class="dashboard-widget-content">
-                                @*<div class="sidebar-widget">
-                                        <h4>凭证有效期</h4>
-                                        <canvas width="150" height="80" id="chart_gauge_@mpAccountDto.Id" class="" style="width: 160px; height: 100px;"></canvas>
-                                        <div class="goal-wrapper">
-                                            <span id="gauge-text_@mpAccountDto.Id" class="gauge-value gauge-chart pull-left">0</span>
-                                            <span class="gauge-value pull-left">%</span>
-                                            <span id="goal-text-@mpAccountDto.Id" class="goal-value pull-right">100%</span>
-                                        </div>
-                                    </div>*@
-                                @*<div class="sidebar-widget">
-                                        <h4>凭证有效期</h4>
-                                        <canvas width="150" height="80" id="chart_gauge_02" class="" style="width: 160px; height: 100px;"></canvas>
-                                        <div class="goal-wrapper">
-                                            <span class="gauge-value pull-left">$</span>
-                                            <span id="gauge-text2" class="gauge-value pull-left">2,100</span>
-                                            <span id="goal-text2" class="goal-value pull-right">$5,000</span>
-                                        </div>
-                                    </div>*@
                                 <div class="col-md-4 col-sm-4">
                                     <ul class="quick-list">
                                         <li><i class="fa fa-line-chart"></i><a asp-page="../WeixinUser" asp-route-uid="@Model.Uid">查看用户</a></li>
@@ -178,3 +172,6 @@
         </div>
     </div>
 </div>
+@*<form asp-page="./Index">
+
+    </form>*@
