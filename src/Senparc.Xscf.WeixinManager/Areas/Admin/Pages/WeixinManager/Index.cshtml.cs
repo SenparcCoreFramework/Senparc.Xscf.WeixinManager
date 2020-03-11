@@ -28,6 +28,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
         public List<MpAccountDto> MpAccountDtos { get; set; }
         public int RegisteredMpAccountCount { get; set; }
         public int WeixinUserCount { get; set; }
+        public int TodayWeixinUserCount { get; set; }
 
         public List<AccessTokenBag> AccessTokenBags { get; set; }
 
@@ -64,6 +65,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             }
 
             WeixinUserCount = await _weixinUserService.GetCountAsync(z => true);
+            TodayWeixinUserCount = await _weixinUserService.GetCountAsync(z => z.AddTime >= DateTime.Today);
         }
 
         public async Task<IActionResult> OnPostAccessTokenStatusAsync(int[] ids)

@@ -93,7 +93,7 @@
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
                     <div class="tile-stats">
                         <div class="icon">
-                            <i class="fa fa-caret-square-o-right"></i>
+                            <i class="fa fa-comments"></i>
                         </div>
                         <div class="count">@Model.MpAccountDtos.Count</div>
                         <h3>公众号数量</h3>
@@ -104,7 +104,7 @@
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
                     <div class="tile-stats">
                         <div class="icon">
-                            <i class="fa fa-caret-square-o-right"></i>
+                            <i class="fa fa-tachometer"></i>
                         </div>
                         <div class="count">@Model.AccessTokenBags.Count</div>
                         <h3>运行账号数量</h3>
@@ -115,11 +115,22 @@
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
                     <div class="tile-stats">
                         <div class="icon">
-                            <i class="fa fa-caret-square-o-right"></i>
+                            <i class="fa fa-users"></i>
                         </div>
                         <div class="count">@Model.WeixinUserCount</div>
                         <h3>总微信用户数</h3>
                         <p>在当前平台交互过或自动拉取关注的用户数</p>
+                    </div>
+                </div>
+
+                <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+                    <div class="tile-stats">
+                        <div class="icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div class="count">@Model.WeixinUserCount</div>
+                        <h3>今日新增用户数</h3>
+                        <p>当天已经同步或添加到平台的用户数量</p>
                     </div>
                 </div>
             </div>
