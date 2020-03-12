@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Senparc.CO2NET.RegisterServices;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
 using Senparc.Scf.XscfBase.Database;
 using Senparc.Weixin.MP.Containers;
+using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
@@ -41,6 +43,13 @@ namespace Senparc.Xscf.WeixinManager
 
         public override IServiceCollection AddXscfModule(IServiceCollection services)
         {
+            //services.AddScoped<PostModel>(ServiceProvider =>
+            //{
+            //    //根据条件生成不同的PostModel
+
+
+            //});
+
             return base.AddXscfModule(services);//如果重写此方法，必须调用基类方法
         }
 
@@ -65,15 +74,34 @@ namespace Senparc.Xscf.WeixinManager
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }
 
-        public override IApplicationBuilder UseXscfModule(IApplicationBuilder app)
+        private List<MpAccount> _allMpAccounts = null;
+
+        private List<MpAccount> GetAllMpAccounts(IServiceProvider serviceProvider)
+        {
+            try
+            {
+                if (_allMpAccounts == null)
+                {
+                    var mpAccountService = serviceProvider.GetService<ServiceBase<MpAccount>>();
+                    _allMpAccounts = mpAccountService.GetFullList(z => z.AppId != null && z.AppId.Length > 0, z => z.Id, OrderingType.Ascending);
+                }
+                return _allMpAccounts;
+            }
+            catch
+            {
+                return new List<MpAccount>();
+            }
+
+        }
+
+        public override IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
         {
             try
             {
                 //未安装数据库表的情况下可能会出错，因此需要try
                 using (var scope = app.ApplicationServices.CreateScope())
                 {
-                    var mpAccountService = scope.ServiceProvider.GetService<ServiceBase<MpAccount>>();
-                    var allMpAccount = mpAccountService.GetFullList(z => z.AppId != null && z.AppId.Length > 0, z => z.Id, OrderingType.Ascending);
+                    var allMpAccount = GetAllMpAccounts(scope.ServiceProvider);
 
                     //批量自动注册公众号
                     foreach (var mpAccount in allMpAccount)
@@ -85,11 +113,11 @@ namespace Senparc.Xscf.WeixinManager
                     }
                 }
             }
-            catch 
+            catch
             {
             }
-           
-            return base.UseXscfModule(app);
+
+            return base.UseXscfModule(app, registerService);
         }
 
         #endregion
