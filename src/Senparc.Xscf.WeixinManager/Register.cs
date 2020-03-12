@@ -23,7 +23,7 @@ namespace Senparc.Xscf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.1.6.1-beta1";
+        public override string Version => "0.1.6.2-beta1";
 
 
         public override string MenuName => "微信管理";
@@ -67,20 +67,28 @@ namespace Senparc.Xscf.WeixinManager
 
         public override IApplicationBuilder UseXscfModule(IApplicationBuilder app)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+            try
             {
-                var mpAccountService = scope.ServiceProvider.GetService<ServiceBase<MpAccount>>();
-                var allMpAccount = mpAccountService.GetFullList(z => z.AppId != null && z.AppId.Length > 0, z => z.Id, OrderingType.Ascending);
-
-                //批量自动注册公众号
-                foreach (var mpAccount in allMpAccount)
+                //未安装数据库表的情况下可能会出错，因此需要try
+                using (var scope = app.ApplicationServices.CreateScope())
                 {
-                    Task.Factory.StartNew(async () =>
+                    var mpAccountService = scope.ServiceProvider.GetService<ServiceBase<MpAccount>>();
+                    var allMpAccount = mpAccountService.GetFullList(z => z.AppId != null && z.AppId.Length > 0, z => z.Id, OrderingType.Ascending);
+
+                    //批量自动注册公众号
+                    foreach (var mpAccount in allMpAccount)
                     {
-                        await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
-                    });
+                        Task.Factory.StartNew(async () =>
+                        {
+                            await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
+                        });
+                    }
                 }
             }
+            catch 
+            {
+            }
+           
             return base.UseXscfModule(app);
         }
 
