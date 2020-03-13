@@ -20,8 +20,6 @@ namespace Senparc.Xscf.WeixinManager
     {
         #region IXscfRegister 接口
 
-        public override bool IgnoreInstall => true;//禁止出现安装提示
-
         public override string Name => "Senparc.Xscf.WeixinManager";
 
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
