@@ -20,6 +20,8 @@ namespace Senparc.Xscf.WeixinManager
     {
         #region IXscfRegister 接口
 
+        public override bool CanInstall => false;//禁止出现安装提示
+
         public override string Name => "Senparc.Xscf.WeixinManager";
 
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
@@ -68,8 +70,13 @@ namespace Senparc.Xscf.WeixinManager
             //指定需要删除的数据实体
 
             //注意：这里作为演示，删除了所有的表，实际操作过程中，请谨慎操作，并且按照删除顺序对实体进行排序！
-            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XscfDatabaseDbContextType).Keys.ToArray();
-            await base.DropTablesAsync(serviceProvider, mySenparcEntities, dropTableKeys);
+            var dropTableKeys = EntitySetKeys.GetEntitySetInfo(this.XscfDatabaseDbContextType).Keys.ToList();
+
+            //按照删除顺序排序
+            var types = new[] { typeof(UserTag_WeixinUser), typeof(UserTag), typeof(WeixinUser), typeof(MpAccount) };
+            types.ToList().AddRange(dropTableKeys);
+            types = types.Distinct().ToArray();
+            await base.DropTablesAsync(serviceProvider, mySenparcEntities, types);
 
             await base.UninstallAsync(serviceProvider, unsinstallFunc).ConfigureAwait(false);
         }

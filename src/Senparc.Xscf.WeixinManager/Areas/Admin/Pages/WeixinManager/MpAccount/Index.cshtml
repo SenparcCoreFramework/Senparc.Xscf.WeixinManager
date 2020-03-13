@@ -35,6 +35,7 @@
                                 <th class="column-title">备注</th>
                                 <th class="column-title">说明</th>
                                 <th class="column-title">添加时间 </th>
+                                <th class="column-title">消息URL </th>
                                 <th class="column-title">操作 </th>
                                 <th class="bulk-actions">
                                     <a class="antoo" style="color:#fff; font-weight:500;">
@@ -48,7 +49,7 @@
                                         <input type="submit" id="deleteBtn" onclick="deleteCheck('ids','deleteForm'); return false;" form="deleteForm" class="hidden" value="删除" />
                                     </label>
                                 </th>
-                                <th class="bulk-actions" colspan="8">
+                                <th class="bulk-actions" colspan="9">
                                 </th>
                             </tr>
                         </thead>
@@ -71,12 +72,11 @@
                                     <td class=" "><span data-original-title="@item.EncodingAESKey" data-toggle="tooltip" data-placement="top" class=""><i class="fa fa-map-marker fa-shield"></i> ****</span></td>
                                     <td class=" ">@item.AdminRemark</td>
                                     <td class=" ">@item.Remark</td>
-                                    <td class=" "> @item.AddTime.ToShortDateString()</td>
+                                    <td class=" ">@item.AddTime.ToShortDateString()</td>
                                     <td class=" ">
-                                        <a asp-page="../WeixinUser/Index" asp-route-mpid="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="查看会员" class="btn-xs btn btn-info">
-                                            <em class="fa fa-comments"> 查看会员</em>
-                                        </a>
-
+                                        <a href="/WeixinMp/@item.Id" target="_blank" title="[你的域名]/WeixinMp/@item.Id"><i class="fa fa-external-link"></i> 打开</a>
+                                    </td>
+                                    <td class=" ">
                                         <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
                                             <em class="fa fa-edit"> 编辑</em>
                                         </a>
