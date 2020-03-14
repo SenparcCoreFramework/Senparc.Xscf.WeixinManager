@@ -80,6 +80,9 @@
                                         <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
                                             <em class="fa fa-edit"> 编辑</em>
                                         </a>
+                                        <a asp-page="../WeixinUser/Index" asp-route-mpid="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
+                                            <em class="fa fa-users"> 用户管理</em>
+                                        </a>
 
                                     </td>
                                 </tr>
