@@ -20,6 +20,12 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'config'
+    externalFeedCredentials: 'nuget-jeffrey-full-key'
 
 - task: VSBuild@1
   inputs:
