@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.CO2NET.RegisterServices;
 using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Core.Models;
 using Senparc.Scf.Service;
 using Senparc.Scf.XscfBase;
-using Senparc.Scf.XscfBase.Database;
 using Senparc.Weixin.MP.Containers;
-using Senparc.Weixin.MP.Entities.Request;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace Senparc.Xscf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.1.7.1-beta1";
+        public override string Version => "0.1.8.1-beta1";
 
 
         public override string MenuName => "微信管理";
@@ -41,7 +40,7 @@ namespace Senparc.Xscf.WeixinManager
         public override IList<Type> Functions => new Type[] { };
 
 
-        public override IServiceCollection AddXscfModule(IServiceCollection services)
+        public override IServiceCollection AddXscfModule(IServiceCollection services, IConfiguration configuration)
         {
             //services.AddScoped<PostModel>(ServiceProvider =>
             //{
@@ -50,7 +49,7 @@ namespace Senparc.Xscf.WeixinManager
 
             //});
 
-            return base.AddXscfModule(services);//如果重写此方法，必须调用基类方法
+            return base.AddXscfModule(services, configuration);//如果重写此方法，必须调用基类方法
         }
 
         public async Task InstallOrUpdateAsync(IServiceProvider serviceProvider, InstallOrUpdate installOrUpdate)
