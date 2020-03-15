@@ -1,7 +1,7 @@
 ﻿@page
 @model Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager.WeixinUser_IndexModel
 @{
-    var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}的":"所有";
+    var namePrefix = Model.MpAccountDto != null ? $"{Model.MpAccountDto.Name}的" : "所有";
     ViewData["Title"] = $"{namePrefix}用户";
 }
 
@@ -68,29 +68,29 @@
                             @foreach (var item in Model.WeixinUserDtos)
                             {
                                 i++;
-                            <tr class="pointer">
-                                <td class="a-center ">
-                                    <input type="checkbox" class="flat table_records" name="ids" form="deleteForm" value="@item.Id">
-                                </td>
-                                <td class=" ">@(i) </td>
-                                <td class=" ">@item.NickName </td>
-                                <td class=" "><img src="@item.HeadImgUrl" height="50" /></td>
-                                <td class=" ">@item.Country @item.Province @item.City</td>
-                                <td class=" ">@item.Groupid</td>
-                                <td class=" ">@(new DateTime(1970, 1, 1).AddSeconds(item.Subscribe_Time).ToString())</td>
-                                <td class=" ">@(item.Subscribe == 1 ? "是" : "否")</td>
-                                <td class=" ">@item.Subscribe_Scene</td>
-                                <td class=" ">@(item.Tagid_List == null ? "无" : string.Join(",", item.Tagid_List.Select(z => z.ToString())))</td>
-                                <td class=" ">@item.AdminRemark</td>
-                                <td class=" ">@item.Remark</td>
-                                <td class=" "> @item.AddTime.ToShortDateString()</td>
-                                <td class=" ">
-                                    <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
-                                        <em class="fa fa-edit"> 编辑</em>
-                                    </a>
+                                <tr class="pointer">
+                                    <td class="a-center ">
+                                        <input type="checkbox" class="flat table_records" name="ids" form="deleteForm" value="@item.Id">
+                                    </td>
+                                    <td class=" ">@(i) </td>
+                                    <td class=" ">@item.NickName </td>
+                                    <td class=" "><img src="@item.HeadImgUrl" height="50" /></td>
+                                    <td class=" ">@item.Country @item.Province @item.City</td>
+                                    <td class=" ">@item.Groupid</td>
+                                    <td class=" ">@(new DateTime(1970, 1, 1).AddSeconds(item.Subscribe_Time).ToString())</td>
+                                    <td class=" ">@(item.Subscribe == 1 ? "是" : "否")</td>
+                                    <td class=" ">@item.Subscribe_Scene</td>
+                                    <td class=" ">@(item.Tagid_List == null ? "无" : string.Join(",", item.Tagid_List.Select(z => z.ToString())))</td>
+                                    <td class=" ">@item.AdminRemark</td>
+                                    <td class=" ">@item.Remark</td>
+                                    <td class=" "> @item.AddTime.ToString()</td>
+                                    <td class=" ">
+                                        <a asp-page="./Edit" asp-route-id="@item.Id" asp-route-uid="@Model.XscfModuleDto.Uid" title="编辑" class="btn-xs btn btn-info">
+                                            <em class="fa fa-edit"> 编辑</em>
+                                        </a>
 
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -98,7 +98,9 @@
                 <div class="text-center p jpagerbar">
                     @Html.Raw((Html.PagerBar(Model.WeixinUserDtos, new PagerBarSettings(Url.Page("./Index", new
                {
-                   pageIndex = "{0}"
+                    pageIndex = "{0}",
+                    Model.Uid,
+                    mpId = Model.MpAccountDto?.Id
                }))
                {
                    NoRecordTip = "暂无数据",

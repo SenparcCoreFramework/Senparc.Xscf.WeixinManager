@@ -93,7 +93,8 @@
                 <div class="text-center p jpagerbar">
                     @Html.Raw((Html.PagerBar(Model.MpAccountDtos, new PagerBarSettings(Url.Page("./Index", new
                {
-                   pageIndex = "{0}"
+                   pageIndex = "{0}",
+                   Model.Uid
                }))
                {
                    NoRecordTip = "暂无数据",
