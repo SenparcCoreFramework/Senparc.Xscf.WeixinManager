@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Senparc.Scf.Core.Models.DataBaseModel;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,11 @@ namespace Senparc.Xscf.WeixinManager.Models
         {
             base.Configure(builder);
 
-            builder.Property(z => z.Id).ValueGeneratedNever();//不自动生成
+            builder.HasOne(z => z.MpAccount)
+               .WithMany(z => z.UserTags)
+               .HasForeignKey(z => z.MpAccountId)
+               .OnDelete(DeleteBehavior.Restrict)
+               .HasConstraintName($"FK__{nameof(UserTag)}__{nameof(UserTag.MpAccountId)}");
         }
     }
 }

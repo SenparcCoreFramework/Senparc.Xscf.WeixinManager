@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.1.8.3-beta1</Version>
+    <Version>0.1.8.4-beta1</Version>
     <AssemblyName>Senparc.Xscf.WeixinManager</AssemblyName>
     <RootNamespace>Senparc.Xscf.WeixinManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -61,8 +61,8 @@
     <PackageReference Include="Senparc.Scf.Core" Version="0.3.119-beta1" />
     <PackageReference Include="Senparc.Scf.Mvc.UI" Version="0.3.119-beta1" />
     <PackageReference Include="Senparc.Scf.XscfBase" Version="0.3.119.9-beta1" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.304" />
-    <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="0.1.304" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.400" />
+    <PackageReference Include="Senparc.Weixin.MP.Middleware" Version="0.1.400" />
   </ItemGroup>
 
   <ItemGroup>

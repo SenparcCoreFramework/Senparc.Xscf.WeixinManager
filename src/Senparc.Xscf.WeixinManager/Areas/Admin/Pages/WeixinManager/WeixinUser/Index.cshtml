@@ -17,7 +17,11 @@
 
                     @if (Model.MpAccountDto != null)
                     {
-                        <div class="pull-right"><a class="btn btn-md btn-success" asp-page="./Index" asp-route-uid="@Model.XscfModuleDto.Uid" asp-page-handler="SyncUser" asp-route-mpId="@Model.MpAccountDto.Id"><i class="fa fa-plus"></i> 同步所有关注</a> 注意：如果用户数量众多，可能会消耗非常长的时间！</div>
+                        <div class="pull-right">
+                            <a class="btn btn-md btn-success" asp-page="./Index" asp-route-uid="@Model.XscfModuleDto.Uid" asp-page-handler="SyncUser" asp-route-mpId="@Model.MpAccountDto.Id" asp-route-synctype="add"><i class="fa fa-plus"></i> 追加新增关注</a>
+                            <a class="btn btn-md btn-success" asp-page="./Index" asp-route-uid="@Model.XscfModuleDto.Uid" asp-page-handler="SyncUser" asp-route-mpId="@Model.MpAccountDto.Id" asp-route-synctype="all"><i class="fa fa-exchange"></i> 同步所有关注</a>
+                            注意：如果用户数量众多，可能会消耗非常长的时间！
+                        </div>
                     }
                 </div>
             </div>
@@ -34,6 +38,7 @@
                                 <th class="column-title">#</th>
                                 <th class="column-title">昵称</th>
                                 <th class="column-title">头像</th>
+                                <th class="column-title">性别</th>
                                 <th class="column-title">地区</th>
                                 <th class="column-title">分组</th>
                                 <th class="column-title">关注时间</th>
@@ -44,9 +49,7 @@
                                 <th class="column-title">说明</th>
                                 <th class="column-title">添加时间 </th>
                                 <th class="column-title">操作 </th>
-                                <th class="bulk-actions">
-
-
+                                <th class="bulk-actions" colspan="14">
                                     <label for="deleteBtn" class="btn-sm btn btn-danger" title="删除">
                                         <em class="fa fa-trash-o"></em> &nbsp;<small>删除</small>
                                         <input type="submit" id="deleteBtn" onclick="deleteCheck('ids','deleteForm'); return false;" form="deleteForm" class="hidden" value="删除" />
@@ -56,8 +59,6 @@
                                         已选中 <span class="action-cnt"> </span>
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
-                                </th>
-                                <th class="bulk-actions" colspan="12">
                                 </th>
                             </tr>
                         </thead>
@@ -76,6 +77,22 @@
                                     <td class=" ">@item.NickName </td>
                                     <td class=" "><img src="@item.HeadImgUrl" height="50" /></td>
                                     <td class=" ">@item.Country @item.Province @item.City</td>
+                                    <td class=" ">
+                                        @{
+                                            if (item.Sex == 1)
+                                            {
+                                                <text>男</text>
+                                            }
+                                            else if (item.Sex == 2)
+                                            {
+                                                <text>女</text>
+                                            }
+                                            else
+                                            {
+                                                <text>未知</text>
+                                            }
+                                        }
+                                    </td>
                                     <td class=" ">@item.Groupid</td>
                                     <td class=" ">@(new DateTime(1970, 1, 1).AddSeconds(item.Subscribe_Time).ToString())</td>
                                     <td class=" ">@(item.Subscribe == 1 ? "是" : "否")</td>

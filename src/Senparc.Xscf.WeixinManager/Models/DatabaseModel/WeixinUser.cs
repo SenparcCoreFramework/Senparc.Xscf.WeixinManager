@@ -89,13 +89,17 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         private WeixinUser()
         {
-            base.SetUpdateTime();
         }
 
         /// <summary>
         /// 用户标签
         /// <para>对应微信API tagid_list 属性</para>
         /// </summary>
-        public IList<UserTag_WeixinUser> UserTags_WeixinUsers { get; private set; }
+        public IList<UserTag_WeixinUser> UserTags_WeixinUsers { get; private set; } = new List<UserTag_WeixinUser>();
+
+        public void UpdateTime()
+        {
+            base.SetUpdateTime();
+        }
     }
 }

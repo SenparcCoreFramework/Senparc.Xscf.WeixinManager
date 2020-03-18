@@ -22,5 +22,13 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         public int WeixinUserId { get; private set; }
         public WeixinUser WeixinUser { get; private set; }
+
+        private UserTag_WeixinUser() { }
+
+        public UserTag_WeixinUser(int userTagId, int weixinUserId)
+        {
+            UserTagId = userTagId;
+            WeixinUserId = weixinUserId;
+        }
     }
 }

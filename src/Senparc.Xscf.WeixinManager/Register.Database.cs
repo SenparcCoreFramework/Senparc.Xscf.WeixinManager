@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Senparc.Scf.Core.Areas;
 using Senparc.Scf.XscfBase;
+using Senparc.Weixin.MP.AdvancedAPIs.UserTag;
 using Senparc.Xscf.WeixinManager.Models;
 using System;
 using System.Collections.Generic;
@@ -37,8 +38,13 @@ namespace Senparc.Xscf.WeixinManager
             base.AddAutoMapMapping(profile => {
                 profile.CreateMap<Weixin.MP.AdvancedAPIs.User.UserInfoJson, WeixinUser_UpdateFromApiDto>();
                 profile.CreateMap<WeixinUser_UpdateFromApiDto, WeixinUser>();
+                profile.CreateMap<WeixinUser, WeixinUser_UpdateFromApiDto>();
                 profile.CreateMap<WeixinUserDto, WeixinUser>();
                 profile.CreateMap<WeixinUser, WeixinUserDto>();
+
+                profile.CreateMap<UserTag, UserTag_CreateOrUpdateDto>();
+                profile.CreateMap<UserTag_CreateOrUpdateDto, UserTag>();
+                profile.CreateMap<TagJson_Tag, UserTag>();
             });
         }
 
