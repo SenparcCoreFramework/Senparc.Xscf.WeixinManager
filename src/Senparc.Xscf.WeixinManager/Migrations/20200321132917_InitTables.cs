@@ -3,26 +3,58 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Senparc.Xscf.WeixinManager.Migrations
 {
-    public partial class Add_WeixinUser : Migration
+    public partial class InitTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "WeixinManager_MpAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Flag = table.Column<bool>(nullable: false),
+                    AddTime = table.Column<DateTime>(nullable: false),
+                    LastUpdateTime = table.Column<DateTime>(nullable: false),
+                    AdminRemark = table.Column<string>(maxLength: 300, nullable: true),
+                    Remark = table.Column<string>(maxLength: 300, nullable: true),
+                    Logo = table.Column<string>(maxLength: 200, nullable: true),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    AppId = table.Column<string>(maxLength: 100, nullable: false),
+                    AppSecret = table.Column<string>(maxLength: 100, nullable: false),
+                    Token = table.Column<string>(maxLength: 500, nullable: false),
+                    EncodingAESKey = table.Column<string>(maxLength: 500, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WeixinManager_MpAccount", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WeixinManager_UserTag",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Flag = table.Column<bool>(nullable: false),
                     AddTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     LastUpdateTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     AdminRemark = table.Column<string>(maxLength: 300, nullable: true),
                     Remark = table.Column<string>(maxLength: 300, nullable: true),
-                    Name = table.Column<string>(nullable: true),
+                    MpAccountId = table.Column<int>(nullable: false),
+                    TagId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
                     Count = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WeixinManager_UserTag", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK__UserTag__MpAccountId",
+                        column: x => x.MpAccountId,
+                        principalTable: "WeixinManager_MpAccount",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,6 +124,11 @@ namespace Senparc.Xscf.WeixinManager.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_WeixinManager_UserTag_MpAccountId",
+                table: "WeixinManager_UserTag",
+                column: "MpAccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WeixinManager_UserTag_WeixinUser_WeixinUserId",
                 table: "WeixinManager_UserTag_WeixinUser",
                 column: "WeixinUserId");
@@ -112,6 +149,9 @@ namespace Senparc.Xscf.WeixinManager.Migrations
 
             migrationBuilder.DropTable(
                 name: "WeixinManager_WeixinUser");
+
+            migrationBuilder.DropTable(
+                name: "WeixinManager_MpAccount");
         }
     }
 }

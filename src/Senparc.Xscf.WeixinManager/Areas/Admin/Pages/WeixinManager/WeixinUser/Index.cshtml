@@ -15,6 +15,8 @@
                     </div>
                     @*<div class="pull-right"><a class="btn btn-md btn-success" asp-page="./Edit" asp-route-uid="@Model.XscfModuleDto.Uid"><i class="fa fa-plus"></i> 新增</a></div>*@
 
+                    @(((Models.WeixinUser)ViewData["Test"]).UserTags_WeixinUsers.Count())
+
                     @if (Model.MpAccountDto != null)
                     {
                         <div class="pull-right">
@@ -97,7 +99,21 @@
                                     <td class=" ">@(new DateTime(1970, 1, 1).AddSeconds(item.Subscribe_Time).ToString())</td>
                                     <td class=" ">@(item.Subscribe == 1 ? "是" : "否")</td>
                                     <td class=" ">@item.Subscribe_Scene</td>
-                                    <td class=" ">@(item.Tagid_List == null ? "无" : string.Join(",", item.Tagid_List.Select(z => z.ToString())))</td>
+                                    <td class=" ">
+                                        @if (item.UserTags_WeixinUsers.Count == 0)
+                                        {
+                                            <text>无</text>
+                                        }
+                                        else
+                                        {
+                                            <ul>
+                                                @foreach (var userTag_WeixinUser in item.UserTags_WeixinUsers)
+                                                {
+                                                    <li>@userTag_WeixinUser.UserTag.Name</li>
+                                                }
+                                            </ul>
+                                        }
+                                    </td>
                                     <td class=" ">@item.AdminRemark</td>
                                     <td class=" ">@item.Remark</td>
                                     <td class=" "> @item.AddTime.ToString()</td>

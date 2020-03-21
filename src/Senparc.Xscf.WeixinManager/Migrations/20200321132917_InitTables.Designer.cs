@@ -10,14 +10,14 @@ using Senparc.Xscf.WeixinManager;
 namespace Senparc.Xscf.WeixinManager.Migrations
 {
     [DbContext(typeof(WeixinSenparcEntities))]
-    [Migration("20200310061827_Add_WeixinUser")]
-    partial class Add_WeixinUser
+    [Migration("20200321132917_InitTables")]
+    partial class InitTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -81,7 +81,9 @@ namespace Senparc.Xscf.WeixinManager.Migrations
             modelBuilder.Entity("Senparc.Xscf.WeixinManager.Models.UserTag", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("AddTime")
                         .HasColumnType("datetime");
@@ -99,14 +101,23 @@ namespace Senparc.Xscf.WeixinManager.Migrations
                     b.Property<DateTime>("LastUpdateTime")
                         .HasColumnType("datetime");
 
+                    b.Property<int>("MpAccountId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Remark")
                         .HasColumnType("nvarchar(300)")
                         .HasMaxLength(300);
 
+                    b.Property<int>("TagId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("MpAccountId");
 
                     b.ToTable("WeixinManager_UserTag");
                 });
@@ -213,6 +224,16 @@ namespace Senparc.Xscf.WeixinManager.Migrations
                     b.HasIndex("MpAccountId");
 
                     b.ToTable("WeixinManager_WeixinUser");
+                });
+
+            modelBuilder.Entity("Senparc.Xscf.WeixinManager.Models.UserTag", b =>
+                {
+                    b.HasOne("Senparc.Xscf.WeixinManager.Models.MpAccount", "MpAccount")
+                        .WithMany("UserTags")
+                        .HasForeignKey("MpAccountId")
+                        .HasConstraintName("FK__UserTag__MpAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Senparc.Xscf.WeixinManager.Models.UserTag_WeixinUser", b =>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Senparc.Scf.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Senparc.Xscf.WeixinManager.Models
@@ -85,6 +86,9 @@ namespace Senparc.Xscf.WeixinManager.Models
 
         public MpAccount MpAccount { get; set; }
         public int MpAccountId { get; set; }
+
+        public IList<UserTag_WeixinUserDto> UserTags_WeixinUsers { get; private set; } = new List<UserTag_WeixinUserDto>();
+
     }
 
 

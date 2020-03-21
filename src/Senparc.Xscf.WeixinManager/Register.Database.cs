@@ -43,8 +43,12 @@ namespace Senparc.Xscf.WeixinManager
                 profile.CreateMap<WeixinUser, WeixinUserDto>();
 
                 profile.CreateMap<UserTag, UserTag_CreateOrUpdateDto>();
+                profile.CreateMap<TagJson_Tag, UserTag_CreateOrUpdateDto>();
                 profile.CreateMap<UserTag_CreateOrUpdateDto, UserTag>();
                 profile.CreateMap<TagJson_Tag, UserTag>();
+
+                profile.CreateMap<UserTag_WeixinUserDto, UserTag_WeixinUser>();
+                profile.CreateMap<UserTag_WeixinUser, UserTag_WeixinUserDto>();
             });
         }
 
