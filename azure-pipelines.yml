@@ -16,6 +16,13 @@ variables:
 
 steps:
 
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'select'
+    vstsFeed: 'bf43f0b7-06c0-4916-ac62-e958c3611aa4'
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
