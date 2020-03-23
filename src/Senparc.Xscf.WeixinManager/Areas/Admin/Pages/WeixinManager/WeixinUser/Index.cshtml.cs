@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Senparc.CO2NET.Extensions;
 using Senparc.CO2NET.Trace;
 using Senparc.Scf.Core.Models;
@@ -51,7 +52,8 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             var seh = new Scf.Utility.SenparcExpressionHelper<Models.WeixinUser>();
             seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
             var where = seh.BuildWhereExpression();
-            var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where, z => z.Id, Scf.Core.Enums.OrderingType.Descending, new[] { nameof(Models.WeixinUser.UserTags_WeixinUsers) });
+            var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where,
+                z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p=>p.UserTag));
 
             ViewData["Test"] = result.FirstOrDefault();
             WeixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
@@ -81,7 +83,11 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             SenparcTrace.SendCustomLog("开始公众号用户同步", mpAccount.Name);
             //List<WeixinUserDto> weixinUserDtos = new List<WeixinUserDto>();
             string lastOpenId = null;
-            List<string> openIds = new List<string>();
+            List<string> openIds = new List<string>()
+            {
+                //"olPjZjsbk4WzEbbGDkWWHuwhpg1M"//测试ID
+                //"oxRg0uLsnpHjb8o93uVnwMK_WAVw"
+            };
             while (true)
             {
                 var result = await Senparc.Weixin.MP.AdvancedAPIs.UserApi.GetAsync(mpAccount.AppId, lastOpenId);
@@ -149,7 +155,8 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                 await _userTagService.DeleteAllAsync(tobeRemoveTags);
             }
 
-            var allUsers = await _weixinUserService.GetFullListAsync(z => z.MpAccountId == mpId, null, new[] { nameof(Models.WeixinUser.UserTags_WeixinUsers) });
+            var allUsers = await _weixinUserService.GetFullListAsync(z => z.MpAccountId == mpId,
+                                     z => z.Include(p => p.UserTags_WeixinUsers), null);
 
             ConcurrentBag<Models.WeixinUser> allToSaveWeixinUsers = new ConcurrentBag<Models.WeixinUser>();
             ConcurrentBag<Models.WeixinUser> newWeixinUsers = new ConcurrentBag<Models.WeixinUser>();
@@ -173,53 +180,68 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                         if (weixinUser != null)
                         {
                             //查看已有项更新，两个数据进行对比
-                            var oldWeixinUserJson = weixinUserDto.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore });
-                            var newWeixinUserDto = _weixinUserService.Mapper.Map<Models.WeixinUser_UpdateFromApiDto>(weixinUser);
-                            var newWeixinUserJson = newWeixinUserDto.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore });
-                            if (oldWeixinUserJson != newWeixinUserJson)
+                            var newApiWeixinUserJson = weixinUserDto.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore });
+                            var oldDbWeixinUserDto = _weixinUserService.Mapper.Map<Models.WeixinUser_UpdateFromApiDto>(weixinUser);
+                            oldDbWeixinUserDto.Tagid_List = weixinUser.UserTags_WeixinUsers.Select(z => z.UserTag.TagId).ToArray();
+                            var oldDbWeixinUserJson = oldDbWeixinUserDto.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore });
+                            if (newApiWeixinUserJson != oldDbWeixinUserJson)
                             {
-                                SenparcTrace.SendCustomLog("WeixinUserJson 更新", $"旧：{oldWeixinUserJson}\r\n新：{newWeixinUserJson}");
+                                SenparcTrace.SendCustomLog("WeixinUserJson 更新", $"旧：{oldDbWeixinUserJson}\r\n新：{newApiWeixinUserJson}");
                                 _weixinUserService.Mapper.Map(weixinUserDto, weixinUser);
+
+                                //SenparcTrace.SendCustomLog("weixinUser 实体信息", $"{weixinUser.ToJson(false, new Newtonsoft.Json.JsonSerializerSettings() { ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore })}");
+                                weixinUser.UpdateTime();
+                                allToSaveWeixinUsers.Add(weixinUser);//更新
                             }
 
                             //添加或删除个人的 Tag
-                            foreach (var tag in user.tagid_list)
+                            foreach (var weixinTagId in user.tagid_list)
                             {
-                                var userTag = allDbUserTags.FirstOrDefault(z => z.TagId == tag);
+                                var userTag = allDbUserTags.FirstOrDefault(z => z.TagId == weixinTagId);
                                 if (userTag == null)
                                 {
-                                    SenparcTrace.SendCustomLog("匹配到未同步的 TagId", "TagId：" + tag);//正常情况不会存在
+                                    SenparcTrace.SendCustomLog("匹配到未同步的 TagId", "TagId：" + weixinTagId);//正常情况不会存在
                                 }
 
                                 //查找未添加的Tag
-                                var userTags_WeixinUsers = weixinUser.UserTags_WeixinUsers.FirstOrDefault(z => /*z.WeixinUserId == weixinUser.Id &&*/ z.UserTagId == userTag.Id);
+                                var userTags_WeixinUsers = weixinUser.UserTags_WeixinUsers
+                                                    .FirstOrDefault(z => /*z.WeixinUserId == weixinUser.Id &&*/ z.UserTagId == userTag.Id);
                                 if (userTags_WeixinUsers == null)
                                 {
-                                    weixinUser.UserTags_WeixinUsers.Add(new UserTag_WeixinUser(weixinUser.Id, tag));
+                                    SenparcTrace.SendCustomLog("创建新Tag关联", $"WeixinUser：{weixinUser.NickName} -> TagName：{userTag.Name}");
+
+                                    var userTag_Weixinuser = new UserTag_WeixinUser(userTag.Id, weixinUser.Id);
+                                    userTag_Weixinuser.UpdateTime();
+                                    weixinUser.UserTags_WeixinUsers.Add(userTag_Weixinuser);
+
+
                                 }
                             }
 
                             //查找需要删除的Tag
                             var tobeRemoveTagList = weixinUser.UserTags_WeixinUsers.Where(z =>
                                 {
-                                    var userTag = allDbUserTags.FirstOrDefault(z => z.TagId == z.TagId);
-                                    return !user.tagid_list.Contains(userTag.TagId);
+                                    var dbUserTag = allDbUserTags.FirstOrDefault(t => t.Id == z.UserTagId);
+                                    return !user.tagid_list.Contains(dbUserTag.TagId);
                                 });
 
                             foreach (var userTags_WeixinUsers in tobeRemoveTagList)
                             {
+                                SenparcTrace.SendCustomLog("删除Tag关联", $"WeixinUser：{weixinUser.NickName} -> UserTag.Id：{userTags_WeixinUsers.UserTagId}");
                                 weixinUser.UserTags_WeixinUsers.Remove(userTags_WeixinUsers);
                             }
                         }
                         else
                         {
                             weixinUser = _weixinUserService.Mapper.Map<Models.WeixinUser>(weixinUserDto);//新增
+                            weixinUser.UpdateTime();
                             newWeixinUsers.Add(weixinUser);
+                            allToSaveWeixinUsers.Add(weixinUser);
                         }
 
                         //TODO:更新group信息
-                        weixinUser.UpdateTime();
-                        allToSaveWeixinUsers.Add(weixinUser);//更新
+
+
                     }
                 });
 
@@ -240,7 +262,16 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             }
 
             SenparcTrace.SendCustomLog("保存用户信息", $"{allToSaveWeixinUsers.Count} 个");
-            await _weixinUserService.SaveObjectListAsync(allToSaveWeixinUsers);
+            try
+            {
+                var saveWeixinusers = allToSaveWeixinUsers.OrderBy(z => z.Subscribe_Time);
+                await _weixinUserService.SaveObjectListAsync(saveWeixinusers);
+            }
+            catch (Exception ex)
+            {
+                SenparcTrace.BaseExceptionLog(ex);
+                SenparcTrace.BaseExceptionLog(ex.InnerException);
+            }
 
             base.SetMessager(Scf.Core.Enums.MessageType.success, "更新成功！");
             return RedirectToPage("./Index", new { uid = Uid, mpId = mpId });

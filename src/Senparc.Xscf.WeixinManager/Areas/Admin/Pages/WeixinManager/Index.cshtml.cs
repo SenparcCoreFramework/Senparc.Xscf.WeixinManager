@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Senparc.CO2NET.Extensions;
+using Senparc.Scf.Core.Enums;
 using Senparc.Scf.Service;
 using Senparc.Weixin.Entities;
 using Senparc.Weixin.MP.Containers;
@@ -45,7 +46,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
 
         public async Task OnGetAsync()
         {
-            var allMpAccounts = await _mpAccountService.GetFullListAsync(z => true);
+            var allMpAccounts = await _mpAccountService.GetObjectListAsync(0, 0, z => true, z => z.Id, OrderingType.Descending);
 
             MpAccountDtos = allMpAccounts.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList();
 

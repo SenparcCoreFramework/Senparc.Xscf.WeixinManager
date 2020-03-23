@@ -28,6 +28,9 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
         {
             var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageCount, z => true, z => z.Id, Scf.Core.Enums.OrderingType.Descending);
             MpAccountDtos = new PagedList<MpAccountDto>(result.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
+            
+            //测试，将用户加入某个组
+            //await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.BatchTaggingAsync(MpAccountDtos[0].AppId, 2, new System.Collections.Generic.List<string> { "oxRg0uLsnpHjb8o93uVnwMK_WAVw" });
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int[] ids)

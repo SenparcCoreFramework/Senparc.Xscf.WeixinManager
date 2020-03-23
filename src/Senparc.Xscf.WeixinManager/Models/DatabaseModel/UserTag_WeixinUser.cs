@@ -30,5 +30,19 @@ namespace Senparc.Xscf.WeixinManager.Models
             UserTagId = userTagId;
             WeixinUserId = weixinUserId;
         }
+
+        protected void SetUpdateTime(DateTime? time = default(DateTime?))
+        {
+            if (base.AddTime == DateTime.MinValue)
+            {
+                base.AddTime = SystemTime.Now.LocalDateTime;
+            }
+            base.LastUpdateTime = (time ?? SystemTime.Now.LocalDateTime);
+        }
+
+        public void UpdateTime()
+        {
+            SetUpdateTime(SystemTime.Now.UtcDateTime);
+        }
     }
 }

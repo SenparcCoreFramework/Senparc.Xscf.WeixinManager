@@ -12,6 +12,9 @@ namespace Senparc.Xscf.WeixinManager.Models
     public class UserTag : EntityBase<int>
     {
         public int MpAccountId { get; private set; }
+        /// <summary>
+        /// 微信接口的 tagid
+        /// </summary>
         public int TagId { get; private set; }
         [Required]
         public string Name { get; private set; }
