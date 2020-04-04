@@ -24,14 +24,18 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
         private readonly ServiceBase<Models.MpAccount> _mpAccountService;
         private readonly ServiceBase<Models.WeixinUser> _weixinUserService;
         private readonly ServiceBase<Models.UserTag> _userTagService;
+        private readonly IServiceProvider _serviceProvider;
         private int pageCount = 20;
 
-        public WeixinUser_IndexModel(Lazy<XscfModuleService> xscfModuleService,
+        public WeixinUser_IndexModel(
+            IServiceProvider serviceProvider,
+            Lazy<XscfModuleService> xscfModuleService,
             ServiceBase<Models.MpAccount> mpAccountService, ServiceBase<Models.WeixinUser> weixinUserService,
             ServiceBase<Models.UserTag> userTagService
             )
             : base(xscfModuleService)
         {
+            _serviceProvider = serviceProvider;
             _mpAccountService = mpAccountService;
             _weixinUserService = weixinUserService;
             _userTagService = userTagService;
@@ -53,7 +57,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
             var where = seh.BuildWhereExpression();
             var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where,
-                z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p=>p.UserTag));
+                z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p => p.UserTag));
 
             ViewData["Test"] = result.FirstOrDefault();
             WeixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);

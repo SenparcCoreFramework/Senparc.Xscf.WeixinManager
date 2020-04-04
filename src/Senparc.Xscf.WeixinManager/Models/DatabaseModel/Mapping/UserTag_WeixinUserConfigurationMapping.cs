@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Senparc.Xscf.WeixinManager.Models
 {
-    public class UserTag_WeixinUserConfigurationMapping : ConfigurationMappingWithIdBase<UserTag_WeixinUser>
+    public class UserTag_WeixinUserConfigurationMapping : ConfigurationMappingBase<UserTag_WeixinUser>
     {
         public override void Configure(EntityTypeBuilder<UserTag_WeixinUser> builder)
         {
