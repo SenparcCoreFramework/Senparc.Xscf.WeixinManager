@@ -24,7 +24,7 @@ namespace Senparc.Xscf.WeixinManager
         public override string Uid => "EB84CB21-AC22-406E-0001-000000000001";
 
 
-        public override string Version => "0.2.1-beta1";
+        public override string Version => "0.2.2-beta1";
 
 
         public override string MenuName => "微信管理";
@@ -100,6 +100,9 @@ namespace Senparc.Xscf.WeixinManager
 
         public override IApplicationBuilder UseXscfModule(IApplicationBuilder app, IRegisterService registerService)
         {
+            //注册微信
+            Senparc.Weixin.WeixinRegister.UseSenparcWeixin(null, null, senparcSetting: null);
+
             try
             {
                 //未安装数据库表的情况下可能会出错，因此需要try
