@@ -15,8 +15,8 @@
 <div id="app" v-cloak>
     <div class="admin-role">
         <div class="filter-container">
-            <el-button class="filter-item" type="primary" icon="el-icon-plus" @@click="add">增加</el-button>
-            <el-button class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
+            <el-button size="small" class="filter-item" type="primary" icon="el-icon-plus" @@click="add">增加</el-button>
+            <el-button size="small" class="filter-item" type="danger" icon="el-icon-delete" @@click="del">删除</el-button>
         </div>
         <el-table :data="tableData"
                   border

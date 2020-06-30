@@ -70,9 +70,9 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
         /// <param name="mpId"></param>
         /// <param name="pageIndex"></param>
         /// <returns></returns>
-        public async Task<IActionResult> OnGetAjaxAsync(int mpId = 0, int pageIndex = 1)
+        public async Task<IActionResult> OnGetAjaxAsync(int mpId = 0, int pageIndex = 1, int pageSize = 10)
         {
-            MpAccountDto mpAccountDto = new MpAccountDto();
+            MpAccountDto mpAccountDto = null;// new MpAccountDto();
             if (mpId > 0)
             {
                 var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
@@ -84,14 +84,39 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             }
 
             var seh = new Scf.Utility.SenparcExpressionHelper<Models.WeixinUser>();
-            seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
+            seh.ValueCompare.AndAlso(mpAccountDto != null, z => z.MpAccountId == mpAccountDto.Id);
             var where = seh.BuildWhereExpression();
-            var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where,
+            var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageSize, where,
                 z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p => p.UserTag));
 
             //ViewData["Test"] = result.FirstOrDefault();
             var weixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
-            return Ok(new { mpAccountDto, weixinUserDtos });
+            return Ok(new { mpAccountDto, weixinUserDtos = new { weixinUserDtos.TotalCount, list = weixinUserDtos.Select(_ => new 
+            {
+                _.AddTime,
+                _.Remark,
+                _.AdminRemark,
+                _.City,
+                _.Country,
+                _.Groupid,
+                _.HeadImgUrl,
+                _.Id,
+                _.Language,
+                _.LastUpdateTime,
+                _.MpAccountId,
+                _.NickName,
+                _.OpenId,
+                _.Province,
+                _.Qr_Scene,
+                _.Qr_Scene_Str,
+                _.Sex,
+                _.Subscribe,
+                _.Subscribe_Scene,
+                Subscribe_Time = new DateTime(1970, 1, 1).AddSeconds(_.Subscribe_Time).ToString(),
+                _.Tagid_List,
+                _.UnionId,
+                UserTags_WeixinUsers = _.UserTags_WeixinUsers.Select(__ => new { __.UserTag, __.UserTagId, __.WeixinUserId }),
+            }).AsEnumerable() } });
         }
 
         public enum SyncType
