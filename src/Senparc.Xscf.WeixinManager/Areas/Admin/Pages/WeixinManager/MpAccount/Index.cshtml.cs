@@ -58,7 +58,8 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                     await AccessTokenContainer.RemoveFromCacheAsync(mpAccount.AppId);//Çå³ý×¢²á×´Ì¬
                 }
             }
-            return RedirectToPage("./Index", new { Uid });
+            return Ok(new { Uid });
+            //return RedirectToPage("./Index", new { Uid });
         }
     }
 }
