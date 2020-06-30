@@ -86,5 +86,34 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.Pages.WeixinManager
             //return RedirectToPage("./Edit", new { id = mpAccount.Id, uid = Uid });
             return Ok(new { id = mpAccount.Id, uid = Uid });
         }
+
+        public async Task<IActionResult> OnPostAjaxAsync([FromBody]MpAccountDto mpAccountDto)
+        {
+            MpAccount mpAccount = null;
+            if (mpAccountDto.Id > 0)
+            {
+                mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpAccountDto.Id);
+                if (mpAccount == null)
+                {
+                    return RenderError("公众号信息不存在！");
+                }
+                mpAccountDto.AddTime = mpAccount.AddTime;
+                _mpAccountService.Mapper.Map(mpAccountDto, mpAccount);
+                mpAccount.LastUpdateTime = DateTime.Now;
+            }
+            else
+            {
+                mpAccount = new MpAccount(mpAccountDto);
+            }
+            await _mpAccountService.SaveObjectAsync(mpAccount);
+
+            //重新进行公众号注册
+            await AccessTokenContainer.RegisterAsync(mpAccount.AppId, mpAccount.AppSecret, $"{mpAccount.Name}-{mpAccount.Id}");
+            //立即获取 AccessToken
+            await AccessTokenContainer.GetAccessTokenAsync(mpAccount.AppId, true);
+
+            //return RedirectToPage("./Edit", new { id = mpAccount.Id, uid = Uid });
+            return Ok(new { id = mpAccount.Id, uid = Uid });
+        }
     }
 }
