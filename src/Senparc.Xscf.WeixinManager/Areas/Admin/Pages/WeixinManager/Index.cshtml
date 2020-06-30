@@ -25,7 +25,7 @@
                 color: #BAB8B8;
                 position: absolute;
                 right: 20px;
-                top: -10px;
+                top: -5px;
             }
 
             .wxmanager-item .count {
@@ -82,7 +82,6 @@
                         weixinUserCount: 0,
                         todayWeixinUserCount: 0
                     },
-                    tempData: [1, 2],
                     chartBuilt: false,
                     chartOptions: {},
                     activeNames: [] //默认打开折叠面板
@@ -120,6 +119,7 @@
                         app.getCharData();
                     }, 5000);
                 },
+                // 生成图表
                 bildMpAccountChart(dataArr) {
                     for (var i = 0; i < dataArr.length; i++) {
                         var data = dataArr[i];
