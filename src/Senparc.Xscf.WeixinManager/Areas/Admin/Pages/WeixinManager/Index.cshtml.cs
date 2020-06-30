@@ -70,7 +70,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
         }
 
         /// <summary>
-        /// Handler=Detail
+        /// Handler=Ajax
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> OnGetAjaxAsync()
