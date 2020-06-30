@@ -64,6 +64,36 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             return Page();
         }
 
+        /// <summary>
+        /// handler=Ajax
+        /// </summary>
+        /// <param name="mpId"></param>
+        /// <param name="pageIndex"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> OnGetAjaxAsync(int mpId = 0, int pageIndex = 1)
+        {
+            MpAccountDto mpAccountDto = new MpAccountDto();
+            if (mpId > 0)
+            {
+                var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
+                if (mpAccount == null)
+                {
+                    return RenderError("公众号配置不存在：" + mpId);
+                }
+                mpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
+            }
+
+            var seh = new Scf.Utility.SenparcExpressionHelper<Models.WeixinUser>();
+            seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
+            var where = seh.BuildWhereExpression();
+            var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where,
+                z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p => p.UserTag));
+
+            //ViewData["Test"] = result.FirstOrDefault();
+            var weixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
+            return Ok(new { mpAccountDto, weixinUserDtos });
+        }
+
         public enum SyncType
         {
             /// <summary>
@@ -277,11 +307,12 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                 SenparcTrace.BaseExceptionLog(ex.InnerException);
             }
 
-            base.SetMessager(Scf.Core.Enums.MessageType.success, "更新成功！");
-            return RedirectToPage("./Index", new { uid = Uid, mpId = mpId });
+            //base.SetMessager(Scf.Core.Enums.MessageType.success, "更新成功！");
+            //return RedirectToPage("./Index", new { uid = Uid, mpId = mpId });
+            return Ok(new { uid = Uid, mpId });
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int[] ids)
+        public async Task<IActionResult> OnPostDeleteAsync([FromBody]int[] ids)
         {
             var mpId = 0;
             foreach (var id in ids)
@@ -293,7 +324,8 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                     await _weixinUserService.DeleteObjectAsync(weixinUser);
                 }
             }
-            return RedirectToPage("./Index", new { Uid, mpId });
+            //return RedirectToPage("./Index", new { Uid, mpId });
+            return Ok(new { Uid, mpId });
         }
     }
 }

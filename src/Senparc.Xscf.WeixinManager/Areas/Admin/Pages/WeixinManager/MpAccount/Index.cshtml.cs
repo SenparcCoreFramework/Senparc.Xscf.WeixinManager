@@ -28,12 +28,26 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
         {
             var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageCount, z => true, z => z.Id, Scf.Core.Enums.OrderingType.Descending);
             MpAccountDtos = new PagedList<MpAccountDto>(result.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
-            
+
             //测试，将用户加入某个组
             //await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.BatchTaggingAsync(MpAccountDtos[0].AppId, 2, new System.Collections.Generic.List<string> { "oxRg0uLsnpHjb8o93uVnwMK_WAVw" });
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int[] ids)
+        /// <summary>
+        /// Handler=Ajax
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> OnGetAjaxAsync(int pageIndex = 1, int pageSize = 10)
+        {
+            var result = await _mpAccountService.GetObjectListAsync(pageIndex, pageSize, z => true, z => z.Id, Scf.Core.Enums.OrderingType.Descending);
+            var mpAccountDtos = new PagedList<MpAccountDto>(result.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
+            return Ok(new { mpAccountDtos.TotalCount, pageIndex, pageSize, list = mpAccountDtos.AsEnumerable() });
+            //测试，将用户加入某个组
+            //await Senparc.Weixin.MP.AdvancedAPIs.UserTagApi.BatchTaggingAsync(MpAccountDtos[0].AppId, 2, new System.Collections.Generic.List<string> { "oxRg0uLsnpHjb8o93uVnwMK_WAVw" });
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync([FromBody] int[] ids)
         {
             foreach (var id in ids)
             {
@@ -44,7 +58,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                     await AccessTokenContainer.RemoveFromCacheAsync(mpAccount.AppId);//清除注册状态
                 }
             }
-            return RedirectToPage("./Index",new { Uid });
+            return RedirectToPage("./Index", new { Uid });
         }
     }
 }
