@@ -77,6 +77,10 @@
     <None Include="appsettings.json" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy bin\Debug\netcoreapp3.1\Senparc.Xscf.WeixinManager.dll C:\Users\%25USERNAME%25\.nuget\packages\senparc.xscf.weixinmanager\0.2.2-beta1\lib\netcoreapp3.1 /Y&#xD;&#xA;copy bin\Debug\netcoreapp3.1\Senparc.Xscf.WeixinManager.Views.dll C:\Users\%25USERNAME%25\.nuget\packages\senparc.xscf.weixinmanager\0.2.2-beta1\lib\netcoreapp3.1 /Y" />
+  </Target>
+
 
 
 </Project>
