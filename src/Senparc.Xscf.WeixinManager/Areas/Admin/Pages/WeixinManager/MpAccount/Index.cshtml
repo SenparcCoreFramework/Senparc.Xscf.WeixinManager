@@ -166,13 +166,12 @@
     </el-dialog>
 </div>
 @section scripts {
-    @*<script src="~/js/Admin/mpaccount.js">
-
-        </script>*@
     <script>
         var app = new Vue({
             el: '#app',
             data: {
+                // 菜单栏数据 navMenu.js
+                navMenu: navMenu,
                 searchData: {
                     pageIndex: 1,
                     pageSize: 10,
