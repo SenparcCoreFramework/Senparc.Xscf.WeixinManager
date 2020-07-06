@@ -69,7 +69,44 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             TodayWeixinUserCount = await _weixinUserService.GetCountAsync(z => z.AddTime >= DateTime.Today);
         }
 
-        public async Task<IActionResult> OnPostAccessTokenStatusAsync(int[] ids)
+        /// <summary>
+        /// Handler=Ajax
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> OnGetAjaxAsync()
+        {
+            var allMpAccounts = await _mpAccountService.GetObjectListAsync(0, 0, z => true, z => z.Id, OrderingType.Descending);
+
+            var mpAccountDtos = allMpAccounts.Select(z => _mpAccountService.Mapper.Map<MpAccountDto>(z)).ToList();
+
+            var accessTokenBags = new List<AccessTokenBag>();
+            var registeredMpAccountCount = 0;
+            foreach (var mpAccount in allMpAccounts)
+            {
+                if (await AccessTokenContainer.CheckRegisteredAsync(mpAccount.AppId))
+                {
+                    var bag = await AccessTokenContainer.TryGetItemAsync(mpAccount.AppId);
+                    if (bag.AccessTokenResult != null && !bag.AccessTokenResult.access_token.IsNullOrEmpty())
+                    {
+                        registeredMpAccountCount++;
+                    }
+                    accessTokenBags.Add(bag);
+                }
+            }
+
+            var weixinUserCount = await _weixinUserService.GetCountAsync(z => true);
+            var todayWeixinUserCount = await _weixinUserService.GetCountAsync(z => z.AddTime >= DateTime.Today);
+            return Ok(new 
+            {
+                mpAccountDtos,
+                accessTokenBags,
+                registeredMpAccountCount,
+                weixinUserCount,
+                todayWeixinUserCount
+            });
+        }
+
+        public async Task<IActionResult> OnPostAccessTokenStatusAsync([FromBody]int[] ids)
         {
             var data = new List<AccessTokenData>();
             var allMpAccounts = await _mpAccountService.GetFullListAsync(z => true);
@@ -133,7 +170,7 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
                     TotalSeconds = totalSeconds,
                 });
             }
-            return new JsonResult(data);
+            return Ok(data);
         }
     }
 }
