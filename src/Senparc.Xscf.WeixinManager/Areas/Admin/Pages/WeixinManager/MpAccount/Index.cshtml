@@ -227,7 +227,7 @@
             },
             methods: {
                 fetchData: function () {
-                    return service.get(`/Admin/WeixinManager/MpAccount?handler=Ajax&pageIndex=${this.searchData.pageIndex}&pageSize=${this.searchData.pageSize}`).then(res => {
+                    return service.get(`@Url.Page("Index")?handler=Ajax&pageIndex=${this.searchData.pageIndex}&pageSize=${this.searchData.pageSize}`).then(res => {
                         var responseData = res.data.data;
                         responseData.list.map(ele => {
                             ele.selected = false;
@@ -253,7 +253,7 @@
                     this.dialog.data.id = row.id;
                     this.dialog.visible = true;
                     this.dialog.title = '编辑公众号';
-                    service.get('/Admin/WeixinManager/MpAccount/Edit?handler=Ajax&id=' + row.id).then(res => {
+                    service.get('@Url.Page("Edit")?handler=Ajax&id=' + row.id).then(res => {
                         const responseData = res.data.data;
                         //debugger
                         this.mpAccountForm = {
@@ -274,7 +274,7 @@
                     var obj = JSON.parse(JSON.stringify(this.mpAccountForm));
                     obj.id = this.dialog.data.id;
                     this.$refs.ref_mpAccountForm.validate().then(res => {
-                        return service.post('/Admin/WeixinManager/MpAccount/Edit?handler=Ajax', obj);
+                        return service.post('@Url.Page("Edit")?handler=Ajax', obj);
                     }).then(res => {
                         var message = '新增公众号成功';
                         if (this.dialog.data.id > 0) {
@@ -310,7 +310,7 @@
                     })
 
                     app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
-                        return service.post('/Admin/WeixinManager/MpAccount/Index?handler=Delete', ids);
+                        return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
                             title: '成功',

@@ -147,7 +147,7 @@
 
 @section scripts {
     @*<script src="~/js/Admin/mpaccount.js"></script>*@
-    <script>
+<script>
         var app = new Vue({
             el: '#app',
             data: {
@@ -172,7 +172,7 @@
             methods: {
                 fetchData: function () {
                     var mpId = resizeUrl().mpid;
-                    return service.get(`/Admin/WeixinManager/WeixinUser/Index?handler=Ajax&pageIndex=${this.searchData.pageIndex}&pageSize=${this.searchData.pageSize}&mpId=${mpId}`).then(res => {
+                    return service.get(`@Url.Page("Index")?handler=Ajax&pageIndex=${this.searchData.pageIndex}&pageSize=${this.searchData.pageSize}&mpId=${mpId}`).then(res => {
                         var responseData = res.data.data;
                         responseData.weixinUserDtos.list.map(ele => {
                             ele.selected = false;
@@ -192,7 +192,7 @@
                 addUser: function (synctype) {
                     this.isLoading = true;
                     var mpId = resizeUrl().mpid;
-                    return service.get(`/Admin/WeixinManager/WeixinUser/Index?handler=SyncUser&mpId=${mpId}&synctype=${synctype}`).then(res => {
+                    return service.get(`@Url.Page("Index")?handler=SyncUser&mpId=${mpId}&synctype=${synctype}`).then(res => {
                         this.isLoading = false;
                         return this.fetchData();
                     }).catch(e => {
@@ -223,7 +223,7 @@
                     })
 
                     app.$confirm('是否删除所都选的项目？', { type: 'warning' }).then(res => {
-                        return service.post('/Admin/WeixinManager/WeixinUser/Index?handler=Delete', ids);
+                        return service.post('@Url.Page("Index")?handler=Delete', ids);
                     }).then(res => {
                         this.$notify({
                             title: '成功',
@@ -238,5 +238,5 @@
                 },
             }
         });
-    </script>
+</script>
 }
