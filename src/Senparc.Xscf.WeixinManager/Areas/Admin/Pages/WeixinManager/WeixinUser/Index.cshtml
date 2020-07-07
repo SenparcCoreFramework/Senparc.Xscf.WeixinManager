@@ -147,7 +147,7 @@
 
 @section scripts {
     @*<script src="~/js/Admin/mpaccount.js"></script>*@
-<script>
+    <script>
         var app = new Vue({
             el: '#app',
             data: {
@@ -161,7 +161,8 @@
                 uid: '',
                 multipleSelection: [],
                 docTitle: '',
-                isLoading: false
+                isLoading: false,
+                addLoading:false
             },
             mounted() {
             },
@@ -190,13 +191,19 @@
                     //
                 },
                 addUser: function (synctype) {
-                    this.isLoading = true;
+                      if (synctype === 'all') {
+                        this.isLoading = true;
+                    } else {
+                        this.addLoading = true;
+                    }
                     var mpId = resizeUrl().mpid;
                     return service.get(`@Url.Page("Index")?handler=SyncUser&mpId=${mpId}&synctype=${synctype}`).then(res => {
                         this.isLoading = false;
+                        this.addLoading = false;
                         return this.fetchData();
                     }).catch(e => {
                         this.isLoading = false;
+                        this.addLoading = false;
                     });
                 },
                 asyncUser: function () {
@@ -238,5 +245,5 @@
                 },
             }
         });
-</script>
+    </script>
 }
