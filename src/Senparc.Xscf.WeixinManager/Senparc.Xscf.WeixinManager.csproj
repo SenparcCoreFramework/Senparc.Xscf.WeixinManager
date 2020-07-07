@@ -31,25 +31,16 @@
     <RepositoryUrl> https://github.com/SenparcCoreFramework/Senparc.Xscf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;LocalRelease</Configurations>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'LocalRelease' ">
     <OutputPath>..\BuildOutPut</OutputPath>
     <DocumentationFile>..\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
-    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <DefineConstants>$(DefineConstants);RELEASE;LocalRelease</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='LocalRelease'">
-    <OutputPath>..\..\..\ScfPackageSources\src\BuildOutPut</OutputPath>
-    <DocumentationFile>..\..\..\ScfPackageSources\src\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
-    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'LocalRelease' ">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <OutputPath>..\..\..\ScfPackageSources\src\BuildOutPut</OutputPath>
     <DocumentationFile>..\..\..\ScfPackageSources\src\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
