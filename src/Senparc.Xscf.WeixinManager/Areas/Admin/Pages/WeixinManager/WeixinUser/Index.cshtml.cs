@@ -41,26 +41,26 @@ namespace Senparc.Xscf.WeixinManager.Areas.Admin.WeixinManager
             _userTagService = userTagService;
         }
 
-        public async Task<IActionResult> OnGetAsync(int mpId = 0, int pageIndex = 1)
+        public async Task<IActionResult> OnGetAsync(int mpId = 0, int pageIndex = 1,int pageSize = 20)
         {
-            if (mpId > 0)
-            {
-                var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
-                if (mpAccount == null)
-                {
-                    return RenderError("公众号配置不存在：" + mpId);
-                }
-                MpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
-            }
+            //if (mpId > 0)
+            //{
+            //    var mpAccount = await _mpAccountService.GetObjectAsync(z => z.Id == mpId);
+            //    if (mpAccount == null)
+            //    {
+            //        return RenderError("公众号配置不存在：" + mpId);
+            //    }
+            //    MpAccountDto = _mpAccountService.Mapper.Map<MpAccountDto>(mpAccount);
+            //}
 
-            var seh = new Scf.Utility.SenparcExpressionHelper<Models.WeixinUser>();
-            seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
-            var where = seh.BuildWhereExpression();
-            var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageCount, where,
-                z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p => p.UserTag));
+            //var seh = new Scf.Utility.SenparcExpressionHelper<Models.WeixinUser>();
+            //seh.ValueCompare.AndAlso(MpAccountDto != null, z => z.MpAccountId == MpAccountDto.Id);
+            //var where = seh.BuildWhereExpression();
+            //var result = await _weixinUserService.GetObjectListAsync(pageIndex, pageSize, where,
+            //    z => z.Id, Scf.Core.Enums.OrderingType.Descending, z => z.Include(p => p.UserTags_WeixinUsers).ThenInclude(p => p.UserTag));
 
-            ViewData["Test"] = result.FirstOrDefault();
-            WeixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
+            //ViewData["Test"] = result.FirstOrDefault();
+            //WeixinUserDtos = new PagedList<WeixinUserDto>(result.Select(z => _mpAccountService.Mapper.Map<WeixinUserDto>(z)).ToList(), result.PageIndex, result.PageCount, result.TotalCount);
             return Page();
         }
 
