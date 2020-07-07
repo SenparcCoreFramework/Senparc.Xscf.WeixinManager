@@ -6,6 +6,7 @@
     <AssemblyName>Senparc.Xscf.WeixinManager</AssemblyName>
     <RootNamespace>Senparc.Xscf.WeixinManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='LocalRelease'">true</GeneratePackageOnBuild>
     <Description>
       SCF 模块：盛派官方发布的微信管理后台
 
@@ -28,9 +29,27 @@
       v0.3 优化UI，匹配新版本SCF
     </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/Senparc.Xscf.WeixinManager</RepositoryUrl>
-    <Configurations>Debug;Release;Test</Configurations>
+    <Configurations>Debug;Release;Test;LocalRelease</Configurations>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\BuildOutPut</OutputPath>
+    <DocumentationFile>..\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='LocalRelease'">
+    <OutputPath>..\..\..\ScfPackageSources\src\BuildOutPut</OutputPath>
+    <DocumentationFile>..\..\..\ScfPackageSources\src\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'LocalRelease' ">
     <OutputPath>..\..\..\ScfPackageSources\src\BuildOutPut</OutputPath>
     <DocumentationFile>..\..\..\ScfPackageSources\src\BuildOutPut\Senparc.Scf.XscfBase.XML</DocumentationFile>
     <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
@@ -42,7 +61,7 @@
   <ItemGroup>
     <Compile Remove="Models\Register.Database.cs" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <Content Remove="appsettings.json" />
   </ItemGroup>
@@ -58,7 +77,7 @@
     </PackageReference>
     <!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.1" />-->
 
-    
+
     <PackageReference Include="Senparc.Scf.AreaBase" Version="0.3.401-beta1" />
     <PackageReference Include="Senparc.Scf.Core" Version="0.3.401-beta1" />
     <PackageReference Include="Senparc.Scf.Mvc.UI" Version="0.3.401-beta1" />
