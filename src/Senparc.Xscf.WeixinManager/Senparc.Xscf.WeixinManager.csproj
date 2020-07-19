@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.4.0-beta1</Version>
+    <Version>0.4.1-beta1</Version>
     <AssemblyName>Senparc.Xscf.WeixinManager</AssemblyName>
     <RootNamespace>Senparc.Xscf.WeixinManager</RootNamespace>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
@@ -27,7 +27,7 @@
       v0.1 创世
       v0.2 完成公众号管理、用户管理等功能
       v0.3 优化UI，匹配新版本SCF
-      v0.4 一直WeixinFace
+      v0.4.1 移植WeixinFace
     </PackageReleaseNotes>
     <RepositoryUrl> https://github.com/SenparcCoreFramework/Senparc.Xscf.WeixinManager</RepositoryUrl>
     <Configurations>Debug;Release;Test;LocalRelease</Configurations>
