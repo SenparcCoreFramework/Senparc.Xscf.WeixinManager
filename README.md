@@ -1,3 +1,5 @@
+> # 注意：当前项目已停止更新，请移步：https://github.com/NeuCharFramework/Senparc.Xncf.WeixinManager
+
 # Senparc.Xscf.WeixinManager
 SCF 模块：盛派官方发布的微信管理后台
 
